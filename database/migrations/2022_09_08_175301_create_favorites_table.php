@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('favorites', function (Blueprint $table) {
-            $table->id();
+            $table->integer("user_id");
+            $table->integer("recipe_id");
             $table->timestamps();
         });
     }

@@ -14,7 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('ingredients', function (Blueprint $table) {
-            $table->id();
+            $table->id("ingredient_id");
+            $table->integer("recipe_id");
+            $table->string("name");
+            $table->string("image");
             $table->timestamps();
         });
     }
