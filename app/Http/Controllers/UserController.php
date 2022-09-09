@@ -35,6 +35,10 @@ class UserController extends Controller
         $user->image = $request->image;
 
         $user->save();
+
+        return response()->json([
+            "message" => "User added successfully."
+        ], 201);
     }
 
     /**
