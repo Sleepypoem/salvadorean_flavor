@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Administrator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -19,14 +19,14 @@ class AuthController extends Controller
 
         $validated = $request->validate($validateFields);
 
-        $user = User::create([
+        $admin = Administrator::create([
             "name" => $validated["name"],
             "email" => $validated["email"],
             "password" => Hash::make($validated["password"]),
             "image" => $request->image
         ]);
 
-        $token = $user->createToken("auth_token")->plainTextToken;
+        $token = $admin->createToken("auth_token")->plainTextToken;
 
         return response()->json([
             "message" => "Register success.",
@@ -37,16 +37,15 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 "message" => "Invalid login info."
             ], 401);
         };
 
-        $user = User::where("email", $request->email)->firstOrFail();
+        $admin = Administrator::where(["email" => $request->email])->firstOrFail();
 
-        $token = $user->createToken("auth_token")->plainTextToken;
+        $token = $admin->createToken("auth_token")->plainTextToken;
 
         return response()->json([
             "message" => "Login success.",
@@ -57,6 +56,6 @@ class AuthController extends Controller
 
     public function userInfo(Request $request)
     {
-        return $request->user();
+        return $request->admin();
     }
 }
