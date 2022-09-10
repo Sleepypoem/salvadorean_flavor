@@ -17,7 +17,6 @@ class RecipeController extends Controller
     {
         $recipes = Recipes::all();
         return $recipes;
-      
     }
 
     /**
@@ -28,16 +27,20 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
-        $recipes= new Recipes();
+        $recipes = new Recipes();
         $recipes->recipe_id = $request->recipe_id;
         $recipes->admin_id = $request->admin_id;
-        $recipes->name= $request->name;
-        $recipes->ingredients=$request->ingredients;
-        $recipes->steps=$request->steps;
-        $recipes->category= $request->category;
-        $recipes->image=$request->image;
+        $recipes->name = $request->name;
+        $recipes->ingredients = $request->ingredients;
+        $recipes->steps = $request->steps;
+        $recipes->category = $request->category;
+        $recipes->image = $request->image;
 
-        $recipes-> save();
+        $recipes->save();
+
+        return response()->json([
+            "message" => "Addition success."
+        ], 201);
     }
 
     /**
@@ -49,16 +52,19 @@ class RecipeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $recipes = Recipes::findOrFail($request->id);
+        $recipes = Recipes::findOrFail($id);
         $recipes->recipe_id = $request->recipe_id;
         $recipes->admin_id = $request->admin_id;
-        $recipes->name= $request->name;
-        $recipes->ingredients=$request->ingredients;
-        $recipes->steps=$request->steps;
-        $recipes->category= $request->category;
-        $recipes->image=$request->image;
-        $recipes-> save();
+        $recipes->name = $request->name;
+        $recipes->ingredients = $request->ingredients;
+        $recipes->steps = $request->steps;
+        $recipes->category = $request->category;
+        $recipes->image = $request->image;
+        $recipes->save();
 
+        return response()->json([
+            "message" => "Modification success."
+        ], 200);
     }
 
     /**
@@ -70,6 +76,8 @@ class RecipeController extends Controller
     public function destroy(Request $request)
     {
         Recipes::destroy($request->id);
-        return $recipes;
+        return response()->json([
+            "message" => "Deletion success."
+        ]);
     }
 }
