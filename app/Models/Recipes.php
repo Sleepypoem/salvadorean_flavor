@@ -7,14 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'recipe_id',
-        'admin_id',
         'name',
         'ingredients',
         'steps',
         'category',
         'image'
     ];
-    use HasFactory;
 }
