@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Ingredients;
 
 class Recipe extends Model
 {
@@ -18,4 +19,9 @@ class Recipe extends Model
     ];
 
     protected $primaryKey = "recipe_id";
+
+    public function ingredients()
+    {
+        return $this->belongsToMany(Ingredients::class, "ingredients_recipe", "recipe_id", "ingredient_id");
+    }
 }

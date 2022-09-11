@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Recipes;
+use App\Models\Recipe;
 
 class RecipeController extends Controller
 {
@@ -15,7 +15,7 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        $recipes = Recipes::all();
+        $recipes = Recipe::with("ingredients")->get();
         return $recipes;
     }
 
@@ -27,11 +27,11 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
-        $recipes = new Recipes();
-        $recipes->recipe_id = $request->recipe_id;
-        $recipes->admin_id = $request->admin_id;
+        $ingredients = $request->ingredients;
+
+        $recipes = new Recipe();
         $recipes->name = $request->name;
-        $recipes->ingredients = $request->ingredients;
+        $recipes->ingredients()->attach($ingredients);
         $recipes->steps = $request->steps;
         $recipes->category = $request->category;
         $recipes->image = $request->image;
@@ -52,14 +52,14 @@ class RecipeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $recipes = Recipes::findOrFail($id);
-        $recipes->recipe_id = $request->recipe_id;
-        $recipes->admin_id = $request->admin_id;
+        $ingredients = $request->ingredients;
+
+        $recipes = Recipe::findOrFail($id);
         $recipes->name = $request->name;
-        $recipes->ingredients = $request->ingredients;
         $recipes->steps = $request->steps;
         $recipes->category = $request->category;
         $recipes->image = $request->image;
+        $recipes->ingredients()->sync($ingredients);
         $recipes->save();
 
         return response()->json([
@@ -75,7 +75,7 @@ class RecipeController extends Controller
      */
     public function destroy(Request $request)
     {
-        Recipes::destroy($request->id);
+        Recipe::destroy($request->id);
         return response()->json([
             "message" => "Deletion success."
         ]);
