@@ -33,7 +33,7 @@ class IngredientController extends Controller
         $ingredients->name = $request->name;
         $ingredients->image = $request->image;
 
-        $recipes->save();
+        $ingredients->save();
 
         return response()->json([
             "message" => "Addition success."
