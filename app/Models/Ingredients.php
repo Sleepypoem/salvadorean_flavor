@@ -13,4 +13,6 @@ class Ingredients extends Model
         'name',
         'image'
     ];
+
+    protected $primaryKey = "ingredient_id";
 }

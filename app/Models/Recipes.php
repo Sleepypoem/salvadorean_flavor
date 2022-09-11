@@ -16,4 +16,6 @@ class Recipe extends Model
         'category',
         'image'
     ];
+
+    protected $primaryKey = "recipe_id";
 }
