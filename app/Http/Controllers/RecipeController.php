@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Recipes;
+use App\Models\Recipe;
 
 class RecipeController extends Controller
 {
@@ -15,7 +15,7 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        $recipes = Recipes::all();
+        $recipes = Recipe::with("ingredients")->get();
         return $recipes;
     }
 
@@ -29,7 +29,7 @@ class RecipeController extends Controller
     {
         $ingredients = $request->ingredients;
 
-        $recipes = new Recipes();
+        $recipes = new Recipe();
         $recipes->name = $request->name;
         $recipes->ingredients()->attach($ingredients);
         $recipes->steps = $request->steps;
@@ -54,7 +54,7 @@ class RecipeController extends Controller
     {
         $ingredients = $request->ingredients;
 
-        $recipes = Recipes::findOrFail($id);
+        $recipes = Recipe::findOrFail($id);
         $recipes->name = $request->name;
         $recipes->steps = $request->steps;
         $recipes->category = $request->category;
@@ -75,7 +75,7 @@ class RecipeController extends Controller
      */
     public function destroy(Request $request)
     {
-        Recipes::destroy($request->id);
+        Recipe::destroy($request->id);
         return response()->json([
             "message" => "Deletion success."
         ]);

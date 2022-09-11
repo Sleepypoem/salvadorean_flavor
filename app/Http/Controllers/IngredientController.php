@@ -15,7 +15,7 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        $ingredients = Ingredients::all();
+        $ingredients = Ingredients::with("recipes")->get();
         return $ingredients;
     }
 
