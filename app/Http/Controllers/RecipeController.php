@@ -30,8 +30,6 @@ class RecipeController extends Controller
         $ingredients = $request->ingredients;
 
         $recipes = new Recipes();
-        $recipes->recipe_id = $request->recipe_id;
-        $recipes->admin_id = $request->admin_id;
         $recipes->name = $request->name;
         $recipes->ingredients()->attach($ingredients);
         $recipes->steps = $request->steps;
@@ -57,8 +55,6 @@ class RecipeController extends Controller
         $ingredients = $request->ingredients;
 
         $recipes = Recipes::findOrFail($id);
-        $recipes->recipe_id = $request->recipe_id;
-        $recipes->admin_id = $request->admin_id;
         $recipes->name = $request->name;
         $recipes->steps = $request->steps;
         $recipes->category = $request->category;
