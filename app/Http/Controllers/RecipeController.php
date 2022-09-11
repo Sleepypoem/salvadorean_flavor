@@ -27,11 +27,13 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
+        $ingredients = $request->ingredients;
+
         $recipes = new Recipes();
         $recipes->recipe_id = $request->recipe_id;
         $recipes->admin_id = $request->admin_id;
         $recipes->name = $request->name;
-        $recipes->ingredients = $request->ingredients;
+        $recipes->ingredients()->attach($ingredients);
         $recipes->steps = $request->steps;
         $recipes->category = $request->category;
         $recipes->image = $request->image;
@@ -52,14 +54,16 @@ class RecipeController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $ingredients = $request->ingredients;
+
         $recipes = Recipes::findOrFail($id);
         $recipes->recipe_id = $request->recipe_id;
         $recipes->admin_id = $request->admin_id;
         $recipes->name = $request->name;
-        $recipes->ingredients = $request->ingredients;
         $recipes->steps = $request->steps;
         $recipes->category = $request->category;
         $recipes->image = $request->image;
+        $recipes->ingredients()->sync($ingredients);
         $recipes->save();
 
         return response()->json([
