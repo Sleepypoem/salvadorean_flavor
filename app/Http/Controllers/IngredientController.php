@@ -47,10 +47,10 @@ class IngredientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $ingredients = Ingredients::findOrFail($request->$id);
-        
+
         $ingredients->recipe_id = $request->recipe_id;
         $ingredients->name = $request->name;
         $ingredients->image = $request->image;
@@ -60,7 +60,6 @@ class IngredientController extends Controller
         return response()->json([
             "message" => "Modification success."
         ], 200);
-
     }
 
     /**
@@ -71,7 +70,7 @@ class IngredientController extends Controller
      */
     public function destroy(Request $request)
     {
-        Igredients::destroy($request->id);
+        Ingredients::destroy($request->id);
         return response()->json([
             "message" => "Deletion success."
         ]);
