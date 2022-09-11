@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Ingredients;
 
 class IngredientController extends Controller
 {
@@ -14,17 +15,8 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $ingredients = Ingredients::all();
+        return $ingredients;
     }
 
     /**
@@ -35,29 +27,17 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $ingredients = new Ingredients();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $ingredients->recipe_id = $request->recipe_id;
+        $ingredients->name = $request->name;
+        $ingredients->image = $request->image;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $recipes->save();
+
+        return response()->json([
+            "message" => "Addition success."
+        ], 201);
     }
 
     /**
@@ -67,19 +47,33 @@ class IngredientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $ingredients = Ingredients::findOrFail($request->$id);
+        
+        $ingredients->recipe_id = $request->recipe_id;
+        $ingredients->name = $request->name;
+        $ingredients->image = $request->image;
+
+        $ingredients->save();
+
+        return response()->json([
+            "message" => "Modification success."
+        ], 200);
+
     }
 
     /**
      * Remove the specified resource from storage.
-     *
+     *@param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        Igredients::destroy($request->id);
+        return response()->json([
+            "message" => "Deletion success."
+        ]);
     }
 }
