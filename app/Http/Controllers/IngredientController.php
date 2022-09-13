@@ -19,7 +19,7 @@ class IngredientController extends Controller
         return $ingredients;
     }
 
-     /**
+    /**
      * Display the specified resource.
      *
      * @param  \App\Models\Ingredients  $ingredient
@@ -42,7 +42,6 @@ class IngredientController extends Controller
     {
         $ingredients = new Ingredients();
 
-        $ingredients->recipe_id = $request->recipe_id;
         $ingredients->name = $request->name;
         $ingredients->image = $request->image;
 
@@ -64,7 +63,6 @@ class IngredientController extends Controller
     {
         $ingredients = Ingredients::findOrFail($request->$id);
 
-        $ingredients->recipe_id = $request->recipe_id;
         $ingredients->name = $request->name;
         $ingredients->image = $request->image;
 
