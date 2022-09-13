@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,17 +25,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 /* ***************************************************************** Admin routes ***************************************************************** */
+Route::get("/v1/users", [AuthController::class, "index"]);
 Route::post("/v1/register", [AuthController::class, 'register']);
 Route::post("/v1/login", [AuthController::class, 'login']);
 Route::post("/v1/user_info", [AuthController::class, 'userInfo'])->middleware("auth:sanctum");
-/* ************************************************************************************************************************************************ */
-
-/* ****************************************************************** User Routes ***************************************************************** */
-Route::get("/v1/users", [UserController::class, "index"]);
-Route::get("/v1/user/{user}", [UserController::class, "show"]);
-Route::post("/v1/user", [UserController::class, "store"]);
-Route::put("/v1/user/{user}", [UserController::class, "update"]);
-Route::delete("/v1/user/{user}", [UserController::class, "destroy"]);
+Route::put("/v1/user/{user}", [AuthController::class, "update"]);
+Route::delete("/v1/user/{user}", [AuthController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* **************************************************************** Recipes routes **************************************************************** */
@@ -53,4 +50,20 @@ Route::get("/v1/tags/{tags}", [TagsController::class, "show"]);
 Route::post("/v1/tags", [TagsController::class, "store"]);
 Route::put("/v1/tags/{tags}", [TagsController::class, "update"]);
 Route::delete("/v1/tags/{tags}", [TagsController::class, "destroy"]);
+/* ************************************************************************************************************************************************ */
+
+/* ***************************************************************** Roles routes ***************************************************************** */
+Route::get("/v1/roles", [RoleController::class, "index"]);
+Route::get("/v1/roles", [RoleController::class, "index"]);
+Route::post("/v1/role", [RoleController::class, "store"]);
+Route::put("/v1/role/{role}", [RoleController::class, "update"]);
+Route::delete("/v1/role/{role}", [RoleController::class, "destroy"]);
+/* ************************************************************************************************************************************************ */
+
+/* *************************************************************** Permission routes ************************************************************** */
+Route::get("/v1/permissions", [PermissionController::class, "index"]);
+Route::get("/v1/permission/{permission}", [PermissionController::class, "show"]);
+Route::post("/v1/permission", [PermissionController::class, "store"]);
+Route::put("/v1/permission/{permission}", [PermissionController::class, "update"]);
+Route::delete("/v1/permission/{permission}", [PermissionController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
