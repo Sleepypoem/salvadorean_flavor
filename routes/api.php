@@ -25,17 +25,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 /* ***************************************************************** Admin routes ***************************************************************** */
+Route::get("/v1/users", [AuthController::class, "index"]);
 Route::post("/v1/register", [AuthController::class, 'register']);
 Route::post("/v1/login", [AuthController::class, 'login']);
 Route::post("/v1/user_info", [AuthController::class, 'userInfo'])->middleware("auth:sanctum");
-/* ************************************************************************************************************************************************ */
-
-/* ****************************************************************** User Routes ***************************************************************** */
-Route::get("/v1/users", [UserController::class, "index"]);
-Route::get("/v1/user/{user}", [UserController::class, "show"]);
-Route::post("/v1/user", [UserController::class, "store"]);
-Route::put("/v1/user/{user}", [UserController::class, "update"]);
-Route::delete("/v1/user/{user}", [UserController::class, "destroy"]);
+Route::put("/v1/user/{user}", [AuthController::class, "update"]);
+Route::delete("/v1/user/{user}", [AuthController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* **************************************************************** Recipes routes **************************************************************** */
