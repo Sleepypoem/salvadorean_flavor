@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Administrator;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+
+//spatie
+
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -14,19 +18,22 @@ class AuthController extends Controller
         $validateFields = [
             "name" => "required|string|min:5|max:255",
             "email" => "required|string|email|max:255|unique:users",
-            "password" => "required|string|min:8"
+            "password" => "required|string|min:8",
+            "role" => "required"
         ];
 
         $validated = $request->validate($validateFields);
 
-        $admin = Administrator::create([
+        $obj_user = User::create([
             "name" => $validated["name"],
             "email" => $validated["email"],
             "password" => Hash::make($validated["password"]),
             "image" => $request->image
         ]);
 
-        $token = $admin->createToken("auth_token")->plainTextToken;
+        $obj_user->syncRoles($validated["role"]);
+
+        $token = $obj_user->createToken("auth_token")->plainTextToken;
 
         return response()->json([
             "message" => "Register success.",
@@ -43,9 +50,9 @@ class AuthController extends Controller
             ], 401);
         };
 
-        $admin = Administrator::where(["email" => $request->email])->firstOrFail();
+        $obj_user = User::where(["email" => $request->email])->firstOrFail();
 
-        $token = $admin->createToken("auth_token")->plainTextToken;
+        $token = $obj_user->createToken("auth_token")->plainTextToken;
 
         return response()->json([
             "message" => "Login success.",
@@ -54,8 +61,44 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, User $user)
+    {
+        $obj_user = User::find($user)->first();
+        $obj_user->name = $request->name;
+        $obj_user->email = $request->email;
+        $obj_user->password = $request->password;
+        $obj_user->image = $request->image;
+
+        $obj_user->save();
+
+        return response()->json([
+            "message" => "User modified successfully."
+        ], 201);
+    }
+
     public function userInfo(Request $request)
     {
-        return $request->admin();
+        return $request->user();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user)
+    {
+        User::destroy($user->user_id);
+        return response()->json([
+            "message" => "User deleted successfully."
+        ], 201);
     }
 }
