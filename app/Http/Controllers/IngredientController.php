@@ -42,7 +42,7 @@ class IngredientController extends Controller
     {
         $ingredients = new Ingredients();
 
-        $ingredients->recipe_id = $request->recipe_id;
+        //$ingredients->recipe_id = $request->recipe_id;
         $ingredients->name = $request->name;
         $ingredients->image = $request->image;
 
@@ -60,11 +60,11 @@ class IngredientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $ingredients = Ingredients::findOrFail($request->$id);
+        $ingredients = Ingredients::findOrFail($request->id);
 
-        $ingredients->recipe_id = $request->recipe_id;
+        //$ingredients->recipe_id = $request->recipe_id;
         $ingredients->name = $request->name;
         $ingredients->image = $request->image;
 
