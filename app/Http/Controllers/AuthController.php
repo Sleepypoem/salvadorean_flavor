@@ -13,6 +13,14 @@ use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
+
+    public function index()
+    {
+        $users = User::with("roles")->get()->paginate(5);
+
+        return $users;
+    }
+
     public function register(Request $request)
     {
         $validateFields = [
@@ -78,6 +86,8 @@ class AuthController extends Controller
 
         $obj_user->save();
 
+        $obj_user->syncRoles($request->role);
+
         return response()->json([
             "message" => "User modified successfully."
         ], 201);
@@ -85,7 +95,9 @@ class AuthController extends Controller
 
     public function userInfo(Request $request)
     {
-        return $request->user();
+        $obj_user = User::find($request->id);
+
+        return $obj_user;
     }
 
     /**
