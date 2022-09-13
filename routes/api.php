@@ -46,10 +46,9 @@ Route::delete("/v1/ingredients/{id}", [IngredientController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 /* *************************************************************** Tags routes ************************************************************** */
 Route::get("/v1/tags", [TagsController::class, "index"]);
-Route::get("/v1/tags/{tags}", [TagsController::class, "show"]);
 Route::post("/v1/tags", [TagsController::class, "store"]);
-Route::put("/v1/tags/{tags}", [TagsController::class, "update"]);
-Route::delete("/v1/tags/{tags}", [TagsController::class, "destroy"]);
+Route::put("/v1/tags/{id}", [TagsController::class, "update"]);
+Route::delete("/v1/tags/{id}", [TagsController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* ***************************************************************** Roles routes ***************************************************************** */
