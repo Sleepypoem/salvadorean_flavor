@@ -15,11 +15,11 @@ class TagsController extends Controller
      */
     public function index()
     {
-        $tags=Tags::all();
+        $tags = Tags::all();
         return $tags;
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -29,11 +29,10 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
-        $tags= new Tags();
-        $tags->recipe_id =$request->recipe_id;
+        $tags = new Tags();
+        $tags->recipe_id = $request->recipe_id;
         $tags->name = $request->name;
         $tags->save();
-
     }
     /**
      * Update the specified resource in storage.
@@ -44,11 +43,10 @@ class TagsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $tags= Tags::findOrFail($id);
-        $tags->recipe_id =$request->recipe_id;
+        $tags = Tags::findOrFail($id);
+        $tags->recipe_id = $request->recipe_id;
         $tags->name = $request->name;
         $tags->save();
-
     }
 
     /**
@@ -59,6 +57,6 @@ class TagsController extends Controller
      */
     public function destroy($id)
     {
-        Tags::destroy($request->id);
+        Tags::destroy($id);
     }
 }
