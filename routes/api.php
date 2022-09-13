@@ -39,6 +39,16 @@ Route::get("/v1/recipes", [RecipeController::class, "index"]);
 
 /* *************************************************************** Ingredient routes ************************************************************** */
 Route::get("/v1/ingredients", [IngredientController::class, "index"]);
+Route::post("/v1/ingredient", [IngredientController::class, "store"]);
+Route::put("/v1/ingredient/{id}", [IngredientController::class, "update"]);
+Route::delete("/v1/ingredient/{id}", [IngredientController::class, "destroy"]);
+/* ************************************************************************************************************************************************ */
+/* *************************************************************** Tags routes ************************************************************** */
+Route::get("/v1/tags", [TagsController::class, "index"]);
+Route::get("/v1/tags/{tags}", [TagsController::class, "show"]);
+Route::post("/v1/tags", [TagsController::class, "store"]);
+Route::put("/v1/tags/{tags}", [TagsController::class, "update"]);
+Route::delete("/v1/tags/{tags}", [TagsController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* ***************************************************************** Roles routes ***************************************************************** */
