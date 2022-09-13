@@ -41,7 +41,6 @@ class IngredientController extends Controller
     public function store(Request $request)
     {
         $ingredients = new Ingredients();
-
         $ingredients->name = $request->name;
         $ingredients->image = $request->image;
 
@@ -59,9 +58,9 @@ class IngredientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $ingredients = Ingredients::findOrFail($request->$id);
+        $ingredients = Ingredients::findOrFail($request->id);
 
         $ingredients->name = $request->name;
         $ingredients->image = $request->image;
