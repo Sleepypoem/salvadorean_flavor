@@ -19,6 +19,19 @@ class IngredientController extends Controller
         return $ingredients;
     }
 
+     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Ingredients  $ingredient
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Ingredients $ingredient)
+    {
+        $obj_ingredient = Ingredients::find($ingredient);
+
+        return $obj_ingredient;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
