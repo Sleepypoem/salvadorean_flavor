@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RoleController;
@@ -35,28 +36,28 @@ Route::delete("/v1/user/{user}", [AuthController::class, "destroy"]);
 
 /* **************************************************************** Recipes routes **************************************************************** */
 Route::get("/v1/recipes", [RecipeController::class, "index"]);
-Route::post("/v1/recipes", [RecipeController::class, "store"]);
-Route::put("/v1/recipes/{id}", [RecipeController::class, "update"]);
-Route::delete("/v1/recipes/{id}", [RecipeController::class, "destroy"]);
+Route::post("/v1/recipe", [RecipeController::class, "store"]);
+Route::put("/v1/recipe/{id}", [RecipeController::class, "update"]);
+Route::delete("/v1/recipe/{id}", [RecipeController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* *************************************************************** Ingredient routes ************************************************************** */
 Route::get("/v1/ingredients", [IngredientController::class, "index"]);
-Route::get("/v1/ingredients/{ingredients}", [IngredientController::class, "show"]);
-Route::post("/v1/ingredients", [IngredientController::class, "store"]);
-Route::put("/v1/ingredients/{id}", [IngredientController::class, "update"]);
-Route::delete("/v1/ingredients/{id}", [IngredientController::class, "destroy"]);
+Route::get("/v1/ingredient/{ingredient}", [IngredientController::class, "show"]);
+Route::post("/v1/ingredient", [IngredientController::class, "store"]);
+Route::put("/v1/ingredient/{id}", [IngredientController::class, "update"]);
+Route::delete("/v1/ingredient/{id}", [IngredientController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 /* *************************************************************** Tags routes ************************************************************** */
 Route::get("/v1/tags", [TagsController::class, "index"]);
-Route::post("/v1/tags", [TagsController::class, "store"]);
-Route::put("/v1/tags/{id}", [TagsController::class, "update"]);
-Route::delete("/v1/tags/{id}", [TagsController::class, "destroy"]);
+Route::post("/v1/tag", [TagsController::class, "store"]);
+Route::put("/v1/tag/{id}", [TagsController::class, "update"]);
+Route::delete("/v1/tag/{id}", [TagsController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* ***************************************************************** Roles routes ***************************************************************** */
 Route::get("/v1/roles", [RoleController::class, "index"]);
-Route::get("/v1/roles", [RoleController::class, "index"]);
+Route::get("/v1/role/{role}", [RoleController::class, "show"]);
 Route::post("/v1/role", [RoleController::class, "store"]);
 Route::put("/v1/role/{role}", [RoleController::class, "update"]);
 Route::delete("/v1/role/{role}", [RoleController::class, "destroy"]);
@@ -71,7 +72,13 @@ Route::delete("/v1/permission/{permission}", [PermissionController::class, "dest
 /* ************************************************************************************************************************************************ */
 /* **************************************************************** Categories routes **************************************************************** */
 Route::get("/v1/categories", [CategoriesController::class, "index"]);
-Route::post("/v1/categories", [CategoriesController::class, "store"]);
-Route::put("/v1/categories/{id}", [CategoriesController::class, "update"]);
-Route::delete("/v1/categories/{id}", [CategoriesController::class, "destroy"]);
+Route::post("/v1/category", [CategoriesController::class, "store"]);
+Route::put("/v1/category/{id}", [CategoriesController::class, "update"]);
+Route::delete("/v1/category/{id}", [CategoriesController::class, "destroy"]);
+/* ************************************************************************************************************************************************ */
+
+/* ***************************************************************** Image routes ***************************************************************** */
+Route::get("/image/user/{filename}", [ImageController::class, "userImage"]);
+Route::get("/image/recipe/{filename}", [ImageController::class, "recipeImage"]);
+Route::get("/image/ingredient/{filename}", [ImageController::class, "ingredientImage"]);
 /* ************************************************************************************************************************************************ */

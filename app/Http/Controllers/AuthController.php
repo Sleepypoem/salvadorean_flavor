@@ -7,16 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-//spatie
-
-use Spatie\Permission\Models\Role;
+use App\Http\Traits\ImageManager;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
 
+    use ImageManager;
+
     public function index()
     {
-        $users = User::with("roles")->get()->paginate(5);
+        $users = User::with("roles", "image")->get()->paginate(5);
 
         return $users;
     }
@@ -35,8 +36,12 @@ class AuthController extends Controller
         $obj_user = User::create([
             "name" => $validated["name"],
             "email" => $validated["email"],
-            "password" => Hash::make($validated["password"]),
-            "image" => $request->image
+            "password" => Hash::make($validated["password"])
+        ]);
+
+        $obj_user->image()->create([
+            "title" => $obj_user->name . "_image",
+            "image" => $this->saveImage("users/", $request->image)
         ]);
 
         $obj_user->syncRoles($validated["role"]);
@@ -79,17 +84,25 @@ class AuthController extends Controller
     public function update(Request $request, User $user)
     {
         $obj_user = User::find($user)->first();
+        $obj_image = $obj_user->image;
+
         $obj_user->name = $request->name;
         $obj_user->email = $request->email;
-        $obj_user->password = $request->password;
-        $obj_user->image = $request->image;
+        $obj_user->password = Hash::make($request->password);
+
+        $this->deleteImage($obj_image, "users");
+
+        $obj_user->image()->create([
+            "title" => $obj_user->name . "_image",
+            "image" => $this->saveImage("users/", $request->image)
+        ]);
 
         $obj_user->save();
 
         $obj_user->syncRoles($request->role);
 
         return response()->json([
-            "message" => "User modified successfully."
+            "message" => "User modified successfully"
         ], 201);
     }
 
@@ -106,9 +119,13 @@ class AuthController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        User::destroy($user->user_id);
+        $obj_user = User::find($id);
+        $obj_image = $obj_user->image;
+        $this->deleteImage($obj_image, "users");
+
+        $obj_user->delete();
         return response()->json([
             "message" => "User deleted successfully."
         ], 201);

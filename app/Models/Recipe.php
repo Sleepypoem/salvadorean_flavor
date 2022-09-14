@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Ingredients;
+use App\Models\Image;
 
 class Recipe extends Model
 {
@@ -15,7 +16,6 @@ class Recipe extends Model
         'ingredients',
         'steps',
         'category',
-        'image'
     ];
 
     protected $primaryKey = "recipe_id";
@@ -23,5 +23,10 @@ class Recipe extends Model
     public function ingredients()
     {
         return $this->belongsToMany(Ingredients::class, "ingredients_recipe", "recipe_id", "ingredient_id");
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, "imageable");
     }
 }

@@ -6,8 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ingredients;
 
+use App\Http\Traits\ImageManager;
+use Illuminate\Support\Facades\Storage;
+
 class IngredientController extends Controller
 {
+
+    use ImageManager;
     /**
      * Display a listing of the resource.
      *
@@ -15,8 +20,8 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        $ingredients = Ingredients::with("recipes")->get();
-        return $ingredients;
+        $obj_ingredient = Ingredients::with("recipes")->get();
+        return $obj_ingredient;
     }
 
     /**
@@ -40,11 +45,16 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
-        $ingredients = new Ingredients();
-        $ingredients->name = $request->name;
-        $ingredients->image = $request->image;
+        $obj_ingredient = Ingredients::create([
+            "name" => $request->name
+        ]);
 
-        $ingredients->save();
+        $obj_ingredient->image()->create([
+            "title" => $obj_ingredient->name . "_image",
+            "image" => $this->saveImage("ingredients/", $request->image)
+        ]);
+
+        $obj_ingredient->save();
 
         return response()->json([
             "message" => "Addition success."
@@ -60,12 +70,17 @@ class IngredientController extends Controller
      */
     public function update(Request $request)
     {
-        $ingredients = Ingredients::findOrFail($request->id);
+        $obj_ingredient = Ingredients::findOrFail($request->id);
+        $obj_image = $obj_ingredient->image;
 
-        $ingredients->name = $request->name;
-        $ingredients->image = $request->image;
+        $this->deleteImage($obj_image, "ingredients");
 
-        $ingredients->save();
+        $obj_ingredient->image()->create([
+            "title" => $obj_ingredient->name . "_image",
+            "image" => $this->saveImage("ingredients/", $request->image)
+        ]);
+        $obj_ingredient->name = $request->name;
+        $obj_ingredient->save();
 
         return response()->json([
             "message" => "Modification success."
@@ -80,7 +95,14 @@ class IngredientController extends Controller
      */
     public function destroy(Request $request)
     {
-        Ingredients::destroy($request->id);
+        $obj_ingredient = Ingredients::findOrFail($request->id);
+
+        $obj_image = $obj_ingredient->image;
+
+        $this->deleteImage($obj_image, "ingredients");
+
+        $obj_ingredient->delete();
+
         return response()->json([
             "message" => "Deletion success."
         ]);
