@@ -6,9 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Recipe;
 
+use App\Http\Traits\ImageManager;
+use Illuminate\Support\Facades\Storage;
+
 
 class RecipeController extends Controller
 {
+
+    use ImageManager;
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +21,8 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        $recipes = Recipe::with("ingredients")->get()->paginate(15);
-        return $recipes;
+        $obj_recipes = Recipe::with("ingredients", "image")->get()->paginate(15);
+        return $obj_recipes;
     }
 
     /**
@@ -30,14 +35,18 @@ class RecipeController extends Controller
     {
         $ingredients = $request->ingredients;
 
-        $recipes = new Recipe();
-        $recipes->name = $request->name;
-        $recipes->ingredients()->attach($ingredients);
-        $recipes->steps = $request->steps;
-        $recipes->category = $request->category;
-        $recipes->image = $request->image;
+        $obj_recipe = Recipe::create([
+            "name" => $request->name,
+            "steps" => $request->steps,
+            "category" => $request->category,
+        ]);
 
-        $recipes->save();
+        $obj_recipe->ingredients()->attach($ingredients);
+
+        $obj_recipe->image()->create([
+            "title" => $obj_recipe->name . "_image",
+            "image" => $this->saveImage("recipes/", $request->image)
+        ]);
 
         return response()->json([
             "message" => "Addition success."
@@ -55,13 +64,21 @@ class RecipeController extends Controller
     {
         $ingredients = $request->ingredients;
 
-        $recipes = Recipe::findOrFail($id);
-        $recipes->name = $request->name;
-        $recipes->steps = $request->steps;
-        $recipes->category = $request->category;
-        $recipes->image = $request->image;
-        $recipes->ingredients()->sync($ingredients);
-        $recipes->save();
+        $obj_recipe = Recipe::findOrFail($id);
+        $obj_image = $obj_recipe->image;
+
+        $this->deleteImage($obj_image, "recipes");
+
+        $obj_recipe->image()->create([
+            "title" => $obj_recipe->name . "_image",
+            "image" => $this->saveImage("recipes/", $request->image)
+        ]);
+
+        $obj_recipe->name = $request->name;
+        $obj_recipe->steps = $request->steps;
+        $obj_recipe->category = $request->category;
+        $obj_recipe->ingredients()->sync($ingredients);
+        $obj_recipe->save();
 
         return response()->json([
             "message" => "Modification success."
@@ -76,7 +93,10 @@ class RecipeController extends Controller
      */
     public function destroy(Request $request)
     {
-        Recipe::destroy($request->id);
+        $obj_recipe = Recipe::findOrFail($request->id);
+        $obj_image = $obj_recipe->image;
+
+        $this->deleteImage($obj_image, "recipes");
         return response()->json([
             "message" => "Deletion success."
         ]);
