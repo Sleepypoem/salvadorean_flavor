@@ -22,6 +22,9 @@ trait ImageManager
      */
     public function saveImage($route, $encoded_image)
     {
+        if ($encoded_image === null) {
+            return "default.png";
+        }
         $image_64 = $encoded_image; //your base64 encoded data
 
         $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
@@ -48,12 +51,16 @@ trait ImageManager
     /**
      * Deletes a saved image from the public folder.
      *
-     * @param Image $obj_image The image model that contains the info of the image being deleted.
+     * @param Image|null $obj_image The image model that contains the info of the image being deleted.
      * @param string $route The folder where the image resides.
      * @return void
      */
-    public function deleteImage(Image $obj_image, string $route)
+    public function deleteImage(Image|null $obj_image, string $route)
     {
+        if ($obj_image === null) {
+            return;
+        }
+
         if (Storage::disk("public")->exists("images/$route/" . $obj_image->image) && $obj_image->image != "default.png") {
             Storage::disk("public")->delete("images/$route/" . $obj_image->image);
             $obj_image->delete();

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Image;
+use App\Models\Recipe;
 
 //spatie
 use Spatie\Permission\Traits\HasRoles;
@@ -50,5 +51,10 @@ class User extends Authenticatable
     public function image()
     {
         return $this->morphOne(Image::class, "imageable");
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Recipe::class, "favorites", "user_id", "recipe_id");
     }
 }
