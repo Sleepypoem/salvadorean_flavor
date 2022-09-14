@@ -35,6 +35,9 @@ Route::delete("/v1/user/{user}", [AuthController::class, "destroy"]);
 
 /* **************************************************************** Recipes routes **************************************************************** */
 Route::get("/v1/recipes", [RecipeController::class, "index"]);
+Route::post("/v1/recipes", [RecipeController::class, "store"]);
+Route::put("/v1/recipes/{id}", [RecipeController::class, "update"]);
+Route::delete("/v1/recipes/{id}", [RecipeController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* *************************************************************** Ingredient routes ************************************************************** */
@@ -46,10 +49,9 @@ Route::delete("/v1/ingredients/{id}", [IngredientController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 /* *************************************************************** Tags routes ************************************************************** */
 Route::get("/v1/tags", [TagsController::class, "index"]);
-Route::get("/v1/tags/{tags}", [TagsController::class, "show"]);
 Route::post("/v1/tags", [TagsController::class, "store"]);
-Route::put("/v1/tags/{tags}", [TagsController::class, "update"]);
-Route::delete("/v1/tags/{tags}", [TagsController::class, "destroy"]);
+Route::put("/v1/tags/{id}", [TagsController::class, "update"]);
+Route::delete("/v1/tags/{id}", [TagsController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* ***************************************************************** Roles routes ***************************************************************** */
@@ -66,4 +68,10 @@ Route::get("/v1/permission/{permission}", [PermissionController::class, "show"])
 Route::post("/v1/permission", [PermissionController::class, "store"]);
 Route::put("/v1/permission/{permission}", [PermissionController::class, "update"]);
 Route::delete("/v1/permission/{permission}", [PermissionController::class, "destroy"]);
+/* ************************************************************************************************************************************************ */
+/* **************************************************************** Categories routes **************************************************************** */
+Route::get("/v1/categories", [CategoriesController::class, "index"]);
+Route::post("/v1/categories", [CategoriesController::class, "store"]);
+Route::put("/v1/categories/{id}", [CategoriesController::class, "update"]);
+Route::delete("/v1/categories/{id}", [CategoriesController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
