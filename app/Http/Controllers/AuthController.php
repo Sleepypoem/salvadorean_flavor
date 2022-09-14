@@ -17,7 +17,7 @@ class AuthController extends Controller
 
     public function index()
     {
-        $users = User::with("roles", "image")->get()->paginate(5);
+        $users = User::with("roles", "image", "favorites")->get()->paginate(5);
 
         return $users;
     }
@@ -85,6 +85,7 @@ class AuthController extends Controller
     {
         $obj_user = User::find($user)->first();
         $obj_image = $obj_user->image;
+        $favorites = $request->favorites;
 
         $obj_user->name = $request->name;
         $obj_user->email = $request->email;
@@ -100,6 +101,7 @@ class AuthController extends Controller
         $obj_user->save();
 
         $obj_user->syncRoles($request->role);
+        $obj_user->favorites()->sync($favorites);
 
         return response()->json([
             "message" => "User modified successfully"
