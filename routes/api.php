@@ -69,3 +69,9 @@ Route::post("/v1/permission", [PermissionController::class, "store"]);
 Route::put("/v1/permission/{permission}", [PermissionController::class, "update"]);
 Route::delete("/v1/permission/{permission}", [PermissionController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
+/* **************************************************************** Categories routes **************************************************************** */
+Route::get("/v1/categories", [CategoriesController::class, "index"]);
+Route::post("/v1/categories", [CategoriesController::class, "store"]);
+Route::put("/v1/categories/{id}", [CategoriesController::class, "update"]);
+Route::delete("/v1/categories/{id}", [CategoriesController::class, "destroy"]);
+/* ************************************************************************************************************************************************ */
