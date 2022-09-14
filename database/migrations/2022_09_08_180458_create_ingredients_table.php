@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id("ingredient_id");
             $table->string("name");
-            $table->string("image");
             $table->timestamps();
         });
     }

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string("name");
             $table->text("steps");
             $table->integer("category");
-            $table->string("image");
             $table->timestamps();
         });
     }
