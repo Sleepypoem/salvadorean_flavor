@@ -31,8 +31,8 @@ con un bonito color anaranjado y suficientemente compacto como para aguantar sob
         ]);
 
         Image::create([
-            "title" => "default_recipe.png",
-            "image" => "/public/user_images/default.png",
+            "title" => "Salmorejo Cordobès_image",
+            "image" => "default_recipe.jpg",
             "imageable_type" => "App\Models\Recipe",
             "imageable_id" => "1"
         ]);
@@ -45,8 +45,8 @@ con un bonito color anaranjado y suficientemente compacto como para aguantar sob
         ]);
 
         Image::create([
-            "title" => "default_ingredient.png",
-            "image" => "/public/user_images/default.png",
+            "title" => "Ajo_image",
+            "image" => "ajo.jpg",
             "imageable_type" => "App\Models\Ingredients",
             "imageable_id" => "1"
         ]);
@@ -59,8 +59,8 @@ con un bonito color anaranjado y suficientemente compacto como para aguantar sob
         ]);
 
         Image::create([
-            "title" => "default_ingredient.png",
-            "image" => "/public/user_images/default.png",
+            "title" => "Pan de hogaza_image",
+            "image" => "pan.jpg",
             "imageable_type" => "App\Models\Ingredients",
             "imageable_id" => "2"
         ]);
@@ -73,22 +73,22 @@ con un bonito color anaranjado y suficientemente compacto como para aguantar sob
         ]);
 
         Image::create([
-            "title" => "default_ingredient.png",
-            "image" => "/public/user_images/default.png",
+            "title" => "Tomate_image",
+            "image" => "tomate.jpg",
             "imageable_type" => "App\Models\Ingredients",
             "imageable_id" => "3"
         ]);
 
         Ingredients::create([
             "ingredient_id" => "4",
-            "name" => "Aceite",
+            "name" => "Aceite de oliva",
             "updated_at" => "2022-09-13",
             "created_at" => "2022-09-13",
         ]);
 
         Image::create([
-            "title" => "default_ingredient.png",
-            "image" => "/public/user_images/default.png",
+            "title" => "Aceite de oliva_image",
+            "image" => "aceite_oliva.jpg",
             "imageable_type" => "App\Models\Ingredients",
             "imageable_id" => "4"
         ]);

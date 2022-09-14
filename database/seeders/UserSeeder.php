@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
         ])->assignRole("admin");
 
         Image::create([
-            "title" => "default_user.png",
-            "image" => "/public/user_images/default.png",
+            "title" => "Admin_image.png",
+            "image" => "img_6321f70ac5063.jpg",
             "imageable_type" => "App\Models\User",
             "imageable_id" => "1"
         ]);
