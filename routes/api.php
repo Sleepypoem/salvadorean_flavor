@@ -35,6 +35,9 @@ Route::delete("/v1/user/{user}", [AuthController::class, "destroy"]);
 
 /* **************************************************************** Recipes routes **************************************************************** */
 Route::get("/v1/recipes", [RecipeController::class, "index"]);
+Route::post("/v1/recipes", [RecipeController::class, "store"]);
+Route::put("/v1/recipes/{id}", [RecipeController::class, "update"]);
+Route::delete("/v1/recipes/{id}", [RecipeController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* *************************************************************** Ingredient routes ************************************************************** */
