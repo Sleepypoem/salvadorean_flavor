@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 use App\Http\Traits\ImageManager;
 use Illuminate\Support\Facades\Storage;
@@ -22,16 +23,8 @@ class AuthController extends Controller
         return $users;
     }
 
-    public function register(Request $request)
+    public function createUser(Request $request, array $validated,  $role = "user")
     {
-        $validateFields = [
-            "name" => "required|string|min:5|max:255",
-            "email" => "required|string|email|max:255|unique:users",
-            "password" => "required|string|min:8",
-            "role" => "required"
-        ];
-
-        $validated = $request->validate($validateFields);
 
         $obj_user = User::create([
             "name" => $validated["name"],
@@ -44,7 +37,69 @@ class AuthController extends Controller
             "image" => $this->saveImage("users/", $request->image)
         ]);
 
-        $obj_user->syncRoles($validated["role"]);
+        $obj_user->syncRoles($role);
+
+        return $obj_user;
+    }
+
+    public function registerAdmin(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255",
+                "email" => "required|string|email|max:255|unique:users",
+                "password" => "required|string|min:8"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
+
+
+        $response = Gate::inspect('registerAdmin', User::class);
+
+        if ($response->allowed()) {
+            return response()->json([
+                "message" => "auth.",
+                "debug" => $request->user()
+            ]);
+        } else {
+            return response()->json([
+                "message" =>
+                "unauth",
+                "debug" => $request->user()
+            ]);
+        }
+
+        $obj_user = $this->createUser($request, $validated, "admin");
+
+        $token = $obj_user->createToken("auth_token", ['registerAdmin'])->plainTextToken;
+
+        return response()->json([
+            "message" => "Register success.",
+            "access_token" => $token,
+            "token_type" => "Bearer"
+        ], 201);
+    }
+
+    public function registerUser(Request $request)
+    {
+
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255",
+                "email" => "required|string|email|max:255|unique:users",
+                "password" => "required|string|min:8"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
+        $obj_user = $this->createUser($request, $validated);
 
         $token = $obj_user->createToken("auth_token")->plainTextToken;
 
@@ -70,7 +125,8 @@ class AuthController extends Controller
         return response()->json([
             "message" => "Login success.",
             "access_token" => $token,
-            "token_type" => "Bearer"
+            "token_type" => "Bearer",
+            "debug" => $obj_user->can("create")
         ]);
     }
 
@@ -110,9 +166,7 @@ class AuthController extends Controller
 
     public function userInfo(Request $request)
     {
-        $obj_user = User::find($request->id);
-
-        return $obj_user;
+        return $request->user();
     }
 
     /**
