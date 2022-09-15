@@ -33,6 +33,20 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
+
+        try {
+            $request->validate([
+                "name" => "required",
+                "steps" => "required",
+                "category_id" => "required"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
+
+
         $ingredients = $request->ingredients;
 
         $obj_recipe = Recipe::create([
@@ -45,10 +59,12 @@ class RecipeController extends Controller
 
         $obj_recipe->ingredients()->attach($ingredients);
 
-        $obj_recipe->image()->create([
-            "title" => $obj_recipe->name . "_image",
-            "image" => $this->saveImage("recipes/", $request->image)
-        ]);
+        if ($request->image !== null) {
+            $obj_recipe->image()->create([
+                "title" => $obj_recipe->name . "_image",
+                "image" => $this->saveImage("recipes/", $request->image)
+            ]);
+        }
 
         return response()->json([
             "message" => "Addition success."
