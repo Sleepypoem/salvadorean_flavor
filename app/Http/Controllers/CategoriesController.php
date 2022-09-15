@@ -15,11 +15,11 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = Categories:: all();
+        $categories = Categories::with("recipes")->get()->paginate(10);
         return $categories;
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -29,7 +29,7 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $categories= new Categories();
+        $categories = new Categories();
         $categories->category_id = $request->category_id;
         $categories->name = $request->name;
         $categories->save();
@@ -48,7 +48,6 @@ class CategoriesController extends Controller
         $categories->category_id = $request->category_id;
         $categories->name = $request->name;
         $categories->save();
-
     }
 
     /**

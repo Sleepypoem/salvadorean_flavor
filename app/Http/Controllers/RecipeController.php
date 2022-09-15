@@ -21,7 +21,7 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        $obj_recipes = Recipe::with("ingredients", "image")->get()->paginate(15);
+        $obj_recipes = Recipe::with("ingredients", "image", "category", "tags")->get()->paginate(15);
         return $obj_recipes;
     }
 
@@ -38,8 +38,10 @@ class RecipeController extends Controller
         $obj_recipe = Recipe::create([
             "name" => $request->name,
             "steps" => $request->steps,
-            "category" => $request->category,
         ]);
+
+        $obj_recipe->category_id = $request->category_id;
+        $obj_recipe->save();
 
         $obj_recipe->ingredients()->attach($ingredients);
 
@@ -76,7 +78,7 @@ class RecipeController extends Controller
 
         $obj_recipe->name = $request->name;
         $obj_recipe->steps = $request->steps;
-        $obj_recipe->category = $request->category;
+        $obj_recipe->category_id = $request->category_id;
         $obj_recipe->ingredients()->sync($ingredients);
         $obj_recipe->save();
 
