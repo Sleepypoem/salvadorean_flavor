@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Tags extends Model
 {
     use HasFactory;
-   
+
 
     protected $fillable = [
-        'recipe_id',
         'name'
     ];
-    protected $primaryKey ='tag_id';
+
+    protected $primaryKey = 'tag_id';
+
+    public function recipes()
+    {
+        return $this->belongsToMany(Recipe::class, "recipes_tags", "recipe_id", "tag_id");
+    }
 }
