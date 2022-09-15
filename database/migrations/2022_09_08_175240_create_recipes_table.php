@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id("recipe_id");
             $table->string("name");
             $table->text("steps");
-            $table->integer("category");
+            $table->unsignedBigInteger("category_id")->nullable();
             $table->timestamps();
+
+            $table->foreign("category_id")->references("category_id")->on("categories")->nullOnDelete();
         });
     }
 
