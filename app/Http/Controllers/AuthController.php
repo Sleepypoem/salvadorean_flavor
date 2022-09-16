@@ -159,11 +159,9 @@ class AuthController extends Controller
         }
 
         if (!$this->isAuthorized("update", $user)) {
-            if (!$this->isAuthorized("registerAdmin", User::class)) {
-                return response()->json([
-                    "message" => "User has not the right permissions."
-                ], 401);
-            }
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
         }
 
         $obj_user = User::find($user)->first();
