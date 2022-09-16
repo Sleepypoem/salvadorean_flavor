@@ -23,4 +23,9 @@ class UserPolicy
     {
         return $user->can("create");
     }
+
+    public function destroy(User $user)
+    {
+        return $user->can("delete");
+    }
 }
