@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 use App\Http\Traits\ImageManager;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -42,6 +43,13 @@ class AuthController extends Controller
         return $obj_user;
     }
 
+    /**
+     * Checks if the user is authorized to perform an action.
+     *
+     * @param [mixed] $ability The action that is going to be checked.
+     * @param [mixed] $user  The user who performs the action.
+     * @return boolean True if user is authorized, false otherwise.
+     */
     public function isAuthorized($ability, $user)
     {
         $response = Gate::inspect($ability, $user);
@@ -49,6 +57,12 @@ class AuthController extends Controller
         return $response->allowed();
     }
 
+    /**
+     * Register an admin in the database.
+     *
+     * @param Request $request
+     * @return JsonResponse The response on success or fail.
+     */
     public function registerAdmin(Request $request)
     {
         try {
@@ -66,7 +80,7 @@ class AuthController extends Controller
         if (!$this->isAuthorized("registerAdmin", User::class)) {
             return response()->json([
                 "message" => "User has not the right permissions."
-            ]);
+            ], 401);
         }
 
         $obj_user = $this->createUser($request, $validated, "admin");
@@ -120,8 +134,7 @@ class AuthController extends Controller
         return response()->json([
             "message" => "Login success.",
             "access_token" => $token,
-            "token_type" => "Bearer",
-            "debug" => $obj_user->can("create")
+            "token_type" => "Bearer"
         ]);
     }
 
@@ -145,6 +158,14 @@ class AuthController extends Controller
             ]);
         }
 
+        if (!$this->isAuthorized("update", $user)) {
+            if (!$this->isAuthorized("registerAdmin", User::class)) {
+                return response()->json([
+                    "message" => "User has not the right permissions."
+                ], 401);
+            }
+        }
+
         $obj_user = User::find($user)->first();
         $obj_image = $obj_user->image;
         $favorites = $request->favorites;
@@ -153,7 +174,7 @@ class AuthController extends Controller
         $obj_user->email = $request->email;
         $obj_user->password = Hash::make($request->password);
 
-        if ($request->image != $obj_user->image->image) {
+        if ($request->image != null) {
             $this->deleteImage($obj_image, "users");
 
             $obj_user->image()->create([
@@ -172,9 +193,15 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Gets the info of the user making the request.
+     *
+     * @param Request $request
+     * @return void
+     */
     public function userInfo(Request $request)
     {
-        return $request->user();
+        return $request->user()->load("roles", "image", "favorites");
     }
 
     /**
@@ -187,10 +214,10 @@ class AuthController extends Controller
     {
         $obj_user = User::find($id);
 
-        if (!$this->isAuthorized("delete", $obj_user)) {
+        if (!$this->isAuthorized("destroy", User::class)) {
             return response()->json([
                 "message" => "User has not the right permissions."
-            ]);
+            ], 401);
         }
 
         $obj_image = $obj_user->image;

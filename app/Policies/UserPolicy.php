@@ -24,8 +24,13 @@ class UserPolicy
         return $user->can("create");
     }
 
+    public function update($user, $anotherUser)
+    {
+        return $user->can("update") || $user->user_id === $anotherUser->user_id;
+    }
+
     public function destroy(User $user)
     {
-        return $user->can("delete");
+        return $user->can("create");
     }
 }
