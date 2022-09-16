@@ -57,7 +57,7 @@ Route::delete("/v1/tag/{id}", [TagsController::class, "destroy"]);
 /* ************************************************************************************************************************************************ */
 
 /* ***************************************************************** Roles routes ***************************************************************** */
-Route::get("/v1/roles", [RoleController::class, "index"]);
+Route::get("/v1/roles", [RoleController::class, "index"])->middleware("auth:sanctum");
 Route::get("/v1/role/{role}", [RoleController::class, "show"]);
 Route::post("/v1/role", [RoleController::class, "store"]);
 Route::put("/v1/role/{role}", [RoleController::class, "update"]);
