@@ -6,16 +6,16 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 use App\Http\Traits\ImageManager;
+use App\Http\Traits\HasAuthorization;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
 
-    use ImageManager;
+    use ImageManager, HasAuthorization;
 
     public function index()
     {
@@ -41,20 +41,6 @@ class AuthController extends Controller
         $obj_user->syncRoles($role);
 
         return $obj_user;
-    }
-
-    /**
-     * Checks if the user is authorized to perform an action.
-     *
-     * @param [mixed] $ability The action that is going to be checked.
-     * @param [mixed] $user  The user who performs the action.
-     * @return boolean True if user is authorized, false otherwise.
-     */
-    public function isAuthorized($ability, $user)
-    {
-        $response = Gate::inspect($ability, $user);
-
-        return $response->allowed();
     }
 
     /**
