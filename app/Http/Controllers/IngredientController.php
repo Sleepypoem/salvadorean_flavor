@@ -27,12 +27,12 @@ class IngredientController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Ingredients  $ingredient
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Ingredients $ingredient)
+    public function show($id)
     {
-        $obj_ingredient = Ingredients::find($ingredient);
+        $obj_ingredient = Ingredients::findOrfail($id);
 
         return $obj_ingredient;
     }
