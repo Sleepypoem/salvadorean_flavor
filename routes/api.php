@@ -58,10 +58,10 @@ Route::delete("/v1/tag/{id}", [TagsController::class, "destroy"]);
 
 /* ***************************************************************** Roles routes ***************************************************************** */
 Route::get("/v1/roles", [RoleController::class, "index"])->middleware("auth:sanctum");
-Route::get("/v1/role/{role}", [RoleController::class, "show"]);
-Route::post("/v1/role", [RoleController::class, "store"]);
-Route::put("/v1/role/{role}", [RoleController::class, "update"]);
-Route::delete("/v1/role/{role}", [RoleController::class, "destroy"]);
+Route::get("/v1/role/{role}", [RoleController::class, "show"])->middleware("auth:sanctum");
+Route::post("/v1/role", [RoleController::class, "store"])->middleware("auth:sanctum");
+Route::put("/v1/role/{role}", [RoleController::class, "update"])->middleware("auth:sanctum");
+Route::delete("/v1/role/{role}", [RoleController::class, "destroy"])->middleware("auth:sanctum");
 /* ************************************************************************************************************************************************ */
 
 /* *************************************************************** Permission routes ************************************************************** */
