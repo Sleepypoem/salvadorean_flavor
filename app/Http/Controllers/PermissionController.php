@@ -3,18 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\HasAuthorization;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    use HasAuthorization;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if (!$this->isAuthorized("index", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_permissions = Permission::paginate(10);
 
         return $obj_permissions;

@@ -5,8 +5,7 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 
 use App\Models\User;
-use App\Policies\RolePolicy;
-use App\Policies\UserPolicy;
+use App\Policies\AdminPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Contracts\Auth\Access\Gate;
 
@@ -18,8 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        User::class => UserPolicy::class,
-        User::class => RolePolicy::class
+        User::class => AdminPolicy::class,
     ];
 
     /**

@@ -144,7 +144,7 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!$this->isAuthorized("update", $user)) {
+        if (!$this->isAuthorized("updateUserInfo", $user)) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);

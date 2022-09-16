@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class RolePolicy
+class AdminPolicy
 {
     use HandlesAuthorization;
 
@@ -22,6 +22,18 @@ class RolePolicy
     public function store(User $user)
     {
         return $user->hasRole("admin");
+    }
+
+    public function createTag(User $user)
+    {
+    }
+
+    public function editTag(User $user)
+    {
+    }
+
+    public function destroyTag(User $user)
+    {
     }
 
     public function index(User $user)
@@ -42,5 +54,15 @@ class RolePolicy
     public function destroy(User $user)
     {
         return $user->hasRole("admin");
+    }
+
+    public function registerAdmin(User $user)
+    {
+        return $user->hasRole("admin");
+    }
+
+    public function updateUserInfo($user, $anotherUser)
+    {
+        return $user->hasRole("admin") || $user->user_id === $anotherUser->user_id;
     }
 }

@@ -65,13 +65,14 @@ Route::delete("/v1/role/{role}", [RoleController::class, "destroy"])->middleware
 /* ************************************************************************************************************************************************ */
 
 /* *************************************************************** Permission routes ************************************************************** */
-Route::get("/v1/permissions", [PermissionController::class, "index"]);
-Route::get("/v1/permission/{permission}", [PermissionController::class, "show"]);
-Route::post("/v1/permission", [PermissionController::class, "store"]);
-Route::put("/v1/permission/{permission}", [PermissionController::class, "update"]);
-Route::delete("/v1/permission/{permission}", [PermissionController::class, "destroy"]);
+Route::get("/v1/permissions", [PermissionController::class, "index"])->middleware("auth:sanctum");
+Route::get("/v1/permission/{permission}", [PermissionController::class, "show"])->middleware("auth:sanctum");
+Route::post("/v1/permission", [PermissionController::class, "store"])->middleware("auth:sanctum");
+Route::put("/v1/permission/{permission}", [PermissionController::class, "update"])->middleware("auth:sanctum");
+Route::delete("/v1/permission/{permission}", [PermissionController::class, "destroy"])->middleware("auth:sanctum");
 /* ************************************************************************************************************************************************ */
-/* **************************************************************** Categories routes **************************************************************** */
+
+/* *************************************************************** Categories routes ************************************************************** */
 Route::get("/v1/categories", [CategoriesController::class, "index"]);
 Route::post("/v1/category", [CategoriesController::class, "store"]);
 Route::put("/v1/category/{id}", [CategoriesController::class, "update"]);
