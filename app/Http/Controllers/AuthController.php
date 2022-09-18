@@ -19,6 +19,12 @@ class AuthController extends Controller
 
     public function index()
     {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $users = User::with("roles", "image", "favorites")->get()->paginate(5);
 
         return $users;
@@ -63,7 +69,7 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!$this->isAuthorized("registerAdmin", User::class)) {
+        if (!$this->isAuthorized("admin", User::class)) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
@@ -144,7 +150,7 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!$this->isAuthorized("updateUserInfo", $user)) {
+        if (!$this->isAuthorized("userIsSelf", $user) || !$this->isAuthorized("admin", $user)) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);

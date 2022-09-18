@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\Recipe;
 
 use App\Http\Traits\ImageManager;
-use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Http\Traits\HasAuthorization;
 
 
 class RecipeController extends Controller
 {
 
-    use ImageManager;
+    use ImageManager, HasAuthorization;
     /**
      * Display a listing of the resource.
      *
@@ -21,6 +22,11 @@ class RecipeController extends Controller
      */
     public function index()
     {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
         $obj_recipes = Recipe::with("ingredients", "image", "category", "tags")->get()->paginate(15);
         return $obj_recipes;
     }
@@ -33,6 +39,12 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
+
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
 
         try {
             $request->validate([
@@ -80,6 +92,12 @@ class RecipeController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $ingredients = $request->ingredients;
 
         $obj_recipe = Recipe::findOrFail($id);
@@ -111,6 +129,12 @@ class RecipeController extends Controller
      */
     public function destroy(Request $request)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_recipe = Recipe::findOrFail($request->id);
         $obj_image = $obj_recipe->image;
 

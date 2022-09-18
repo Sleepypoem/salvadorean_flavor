@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\HasAuthorization;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use App\Models\User;
 
 class PermissionController extends Controller
 {
@@ -17,7 +18,7 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$this->isAuthorized("index", $request->user())) {
+        if (!$this->isAuthorized("admin", $request->user())) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
@@ -36,6 +37,12 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $validateFields = [
             "name" => "required",
             "guard_name" => "required"
@@ -64,6 +71,12 @@ class PermissionController extends Controller
      */
     public function show($id)
     {
+        if (!$this->isAuthorized("admin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_permission = Permission::findOrFail($id);
 
         return $obj_permission;
@@ -78,6 +91,12 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $validateFields = [
             "name" => "required",
             "guard_name" => "required"
@@ -104,6 +123,11 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
+        if (!$this->isAuthorized("admin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
         Permission::destroy($id);
 
         return response()->json(

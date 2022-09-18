@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ingredients;
+use App\Http\Traits\HasAuthorization;
 
 use App\Http\Traits\ImageManager;
-use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class IngredientController extends Controller
 {
 
-    use ImageManager;
+    use ImageManager, HasAuthorization;
     /**
      * Display a listing of the resource.
      *
@@ -20,6 +21,12 @@ class IngredientController extends Controller
      */
     public function index()
     {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_ingredient = Ingredients::with("recipes")->get();
         return $obj_ingredient;
     }
@@ -32,6 +39,11 @@ class IngredientController extends Controller
      */
     public function show(Ingredients $ingredient)
     {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
         $obj_ingredient = Ingredients::find($ingredient);
 
         return $obj_ingredient;
@@ -45,6 +57,12 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_ingredient = Ingredients::create([
             "name" => $request->name
         ]);
@@ -70,6 +88,12 @@ class IngredientController extends Controller
      */
     public function update(Request $request)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_ingredient = Ingredients::findOrFail($request->id);
         $obj_image = $obj_ingredient->image;
 
@@ -95,6 +119,12 @@ class IngredientController extends Controller
      */
     public function destroy(Request $request)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_ingredient = Ingredients::findOrFail($request->id);
 
         $obj_image = $obj_ingredient->image;

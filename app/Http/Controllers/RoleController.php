@@ -22,7 +22,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$this->isAuthorized("index", $request->user())) {
+        if (!$this->isAuthorized("admin", $request->user())) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
@@ -41,7 +41,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$this->isAuthorized("index", $request->user())) {
+        if (!$this->isAuthorized("admin", $request->user())) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
@@ -78,7 +78,7 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        if (!$this->isAuthorized("index", User::class)) {
+        if (!$this->isAuthorized("admin", User::class)) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
@@ -98,7 +98,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!$this->isAuthorized("index", $request->user())) {
+        if (!$this->isAuthorized("admin", $request->user())) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
@@ -134,7 +134,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        if (!$this->isAuthorized("index", User::class)) {
+        if (!$this->isAuthorized("admin", User::class)) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
