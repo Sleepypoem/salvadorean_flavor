@@ -43,7 +43,7 @@ class TagsController extends Controller
         }
 
         $tags = new Tags();
-        $tags->recipe_id = $request->recipe_id;
+        //$tags->recipe_id = $request->recipe_id;
         $tags->name = $request->name;
         $tags->save();
     }
@@ -63,7 +63,7 @@ class TagsController extends Controller
         }
 
         $tags = Tags::findOrFail($id);
-        $tags->recipe_id = $request->recipe_id;
+        //$tags->recipe_id = $request->recipe_id;
         $tags->name = $request->name;
         $tags->save();
     }
