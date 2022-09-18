@@ -26,9 +26,11 @@ class RoleSeeder extends Seeder
             "guard_name" => "web"
         ]);
 
-        Permission::create(["name" => "view"])->syncRoles([$admin, $user]);
-        Permission::create(["name" => "create"])->assignRole($admin);
-        Permission::create(["name" => "update"])->assignRole($admin);
-        Permission::create(["name" => "delete"])->assignRole($admin);
+        Permission::create(["name" => "view"])->syncRoles([$user]);
+        Permission::create(["name" => "create"]);
+        Permission::create(["name" => "update"]);
+        Permission::create(["name" => "delete"]);
+
+        $admin->givePermissionTo(Permission::all());
     }
 }

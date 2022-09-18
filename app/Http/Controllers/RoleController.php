@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\HasAuthorization;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 //spatie
 
@@ -11,22 +13,21 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
-
-    public function __construct()
-    {/* 
-        $this->middleware("permission:view_role ", ["only" => ["index"]]);
-        $this->middleware("permission:create_role", ["only" => ["store"]]);
-        $this->middleware("permission:edit_role", ["only" => ["update"]]);
-        $this->middleware("permission:delete_role", ["only" => ["destroy"]]); */
-    }
+    use HasAuthorization;
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_roles = Role::with("permissions")->get()->paginate(10);
 
         return $obj_roles;
@@ -40,6 +41,12 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $validateFields = [
             "name" => "required",
             "permission" => "required",
@@ -71,6 +78,12 @@ class RoleController extends Controller
      */
     public function show($id)
     {
+        if (!$this->isAuthorized("admin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_role = Role::findOrFail($id);
 
         return $obj_role;
@@ -85,6 +98,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!$this->isAuthorized("admin", $request->user())) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $validateFields = [
             "name" => "required",
             "permission" => "required",
@@ -115,6 +134,11 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        if (!$this->isAuthorized("admin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
         Role::destroy($id);
 
         return response()->json(

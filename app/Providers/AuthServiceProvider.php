@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\User;
+use App\Policies\AdminPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\Auth\Access\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -14,7 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        User::class => AdminPolicy::class,
     ];
 
     /**
@@ -22,12 +25,8 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Gate $gate)
     {
-        $this->registerPolicies();
-
-        Gate::before(function ($user, $ability) {
-            return $user->email == "salvadorean_food@admin.com" ?? null;
-        });
+        $this->registerPolicies($gate);
     }
 }

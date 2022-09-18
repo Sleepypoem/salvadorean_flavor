@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -47,4 +48,16 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /* public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof UnauthorizedException) {
+            return response()->json([
+                'responseMessage' => 'You do not have required authorization.',
+                'responseStatus'  => 403,
+            ]);
+        }
+
+        return parent::render($request, $exception);
+    } */
 }
