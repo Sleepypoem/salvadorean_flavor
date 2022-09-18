@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tags;
+use App\Http\Traits\HasAuthorization;
+use App\Models\User;
 
 class TagsController extends Controller
 {
+
+    use HasAuthorization;
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +19,11 @@ class TagsController extends Controller
      */
     public function index()
     {
+if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
         $obj_tag = Tags::with("recipes")->get();
         return $obj_tag;
     }
@@ -31,7 +40,7 @@ class TagsController extends Controller
 
         return $obj_tag;
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -40,10 +49,15 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_tag = Tags::create([
             "name"=> $request->name
         ]);
-        $obj_tag->save();
 
         return response()->json([
             "message" => "Addition success."
@@ -58,8 +72,12 @@ class TagsController extends Controller
      */
     public function update(Request $request)
     {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
         $obj_tag= Tags::findOrFail($request->id);
-        //$tags->recipe_id = $request->recipe_id;
         $obj_tag->name = $request->name;
         $obj_tag->save();
 
@@ -77,6 +95,11 @@ class TagsController extends Controller
      */
     public function destroy(Request $request)
     {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
         $obj_tag = Tags::findOrfail($request->id);
 
         $obj_tag->delete();

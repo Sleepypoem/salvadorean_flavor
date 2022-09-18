@@ -6,32 +6,32 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 use App\Http\Traits\ImageManager;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\HasAuthorization;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
 
-    use ImageManager;
+    use ImageManager, HasAuthorization;
 
     public function index()
     {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $users = User::with("roles", "image", "favorites")->get()->paginate(5);
 
         return $users;
     }
 
-    public function register(Request $request)
+    public function createUser(Request $request, array $validated,  $role = "user")
     {
-        $validateFields = [
-            "name" => "required|string|min:5|max:255",
-            "email" => "required|string|email|max:255|unique:users",
-            "password" => "required|string|min:8",
-            "role" => "required"
-        ];
-
-        $validated = $request->validate($validateFields);
 
         $obj_user = User::create([
             "name" => $validated["name"],
@@ -44,7 +44,63 @@ class AuthController extends Controller
             "image" => $this->saveImage("users/", $request->image)
         ]);
 
-        $obj_user->syncRoles($validated["role"]);
+        $obj_user->syncRoles($role);
+
+        return $obj_user;
+    }
+
+    /**
+     * Register an admin in the database.
+     *
+     * @param Request $request
+     * @return JsonResponse The response on success or fail.
+     */
+    public function registerAdmin(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255",
+                "email" => "required|string|email|max:255|unique:users",
+                "password" => "required|string|min:8"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
+        if (!$this->isAuthorized("admin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
+        $obj_user = $this->createUser($request, $validated, "admin");
+
+        $token = $obj_user->createToken("auth_token", ['registerAdmin'])->plainTextToken;
+
+        return response()->json([
+            "message" => "Register success.",
+            "access_token" => $token,
+            "token_type" => "Bearer"
+        ], 201);
+    }
+
+    public function registerUser(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255",
+                "email" => "required|string|email|max:255|unique:users",
+                "password" => "required|string|min:8"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
+        $obj_user = $this->createUser($request, $validated);
 
         $token = $obj_user->createToken("auth_token")->plainTextToken;
 
@@ -83,6 +139,23 @@ class AuthController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        try {
+            $request->validate([
+                "name" => "required|string|min:5|max:255",
+                "email" => "required|string|email|max:255|unique:users"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
+        if (!$this->isAuthorized("userIsSelf", $user) || !$this->isAuthorized("admin", $user)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_user = User::find($user)->first();
         $obj_image = $obj_user->image;
         $favorites = $request->favorites;
@@ -91,12 +164,14 @@ class AuthController extends Controller
         $obj_user->email = $request->email;
         $obj_user->password = Hash::make($request->password);
 
-        $this->deleteImage($obj_image, "users");
+        if ($request->image != null) {
+            $this->deleteImage($obj_image, "users");
 
-        $obj_user->image()->create([
-            "title" => $obj_user->name . "_image",
-            "image" => $this->saveImage("users/", $request->image)
-        ]);
+            $obj_user->image()->create([
+                "title" => $obj_user->name . "_image",
+                "image" => $this->saveImage("users/", $request->image)
+            ]);
+        }
 
         $obj_user->save();
 
@@ -108,11 +183,15 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Gets the info of the user making the request.
+     *
+     * @param Request $request
+     * @return void
+     */
     public function userInfo(Request $request)
     {
-        $obj_user = User::find($request->id);
-
-        return $obj_user;
+        return $request->user()->load("roles", "image", "favorites");
     }
 
     /**
@@ -124,6 +203,13 @@ class AuthController extends Controller
     public function destroy($id)
     {
         $obj_user = User::find($id);
+
+        if (!$this->isAuthorized("destroy", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
         $obj_image = $obj_user->image;
         $this->deleteImage($obj_image, "users");
 
