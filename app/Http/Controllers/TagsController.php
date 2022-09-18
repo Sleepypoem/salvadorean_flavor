@@ -15,11 +15,22 @@ class TagsController extends Controller
      */
     public function index()
     {
-        $tags = Tags::all();
-        return $tags;
+        $obj_tag = Tags::with("recipes")->get();
+        return $obj_tag;
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $obj_tag = Tags::findOrfail($id);
 
+        return $obj_tag;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -29,10 +40,14 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
-        $tags = new Tags();
-        //$tags->recipe_id = $request->recipe_id;
-        $tags->name = $request->name;
-        $tags->save();
+        $obj_tag = Tags::create([
+            "name"=> $request->name
+        ]);
+        $obj_tag->save();
+
+        return response()->json([
+            "message" => "Addition success."
+        ], 201);
     }
     /**
      * Update the specified resource in storage.
@@ -41,12 +56,17 @@ class TagsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $tags = Tags::findOrFail($id);
+        $obj_tag= Tags::findOrFail($request->id);
         //$tags->recipe_id = $request->recipe_id;
-        $tags->name = $request->name;
-        $tags->save();
+        $obj_tag->name = $request->name;
+        $obj_tag->save();
+
+        return response()->json([
+            "message" => "Modification success."
+        ], 200);
+
     }
 
     /**
@@ -55,8 +75,14 @@ class TagsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        Tags::destroy($id);
+        $obj_tag = Tags::findOrfail($request->id);
+
+        $obj_tag->delete();
+
+        return response()->json([
+            "message" => "Deletion success."
+        ]);
     }
 }
