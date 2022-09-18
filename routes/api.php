@@ -53,6 +53,7 @@ Route::delete("/v1/ingredient/{id}", [IngredientController::class, "destroy"])->
 /* ************************************************************************************************************************************************ */
 /* *************************************************************** Tags routes ************************************************************** */
 Route::get("/v1/tags", [TagsController::class, "index"])->middleware("auth:sanctum");
+Route::get("/v1/tag/{tag}", [TagsController::class, "show"])->middleware("auth:sanctum");
 Route::post("/v1/tag", [TagsController::class, "store"])->middleware("auth:sanctum");
 Route::put("/v1/tag/{id}", [TagsController::class, "update"])->middleware("auth:sanctum");
 Route::delete("/v1/tag/{id}", [TagsController::class, "destroy"])->middleware("auth:sanctum");
