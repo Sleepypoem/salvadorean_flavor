@@ -14,7 +14,7 @@ class Categories extends Model
         "name"
     ];
 
-    protected $PrimaryKey = "category_id";
+    protected $primaryKey = "category_id";
 
     public function recipes()
     {

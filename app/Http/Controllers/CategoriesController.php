@@ -55,6 +55,19 @@ class CategoriesController extends Controller
         );
     }
 
+    public function show($id)
+    {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
+        $obj_category = Categories::find($id);
+
+        return $obj_category->load("recipes");
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -80,6 +93,7 @@ class CategoriesController extends Controller
             ]
         );
     }
+
 
     /**
      * Remove the specified resource from storage.

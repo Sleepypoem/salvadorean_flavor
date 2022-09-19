@@ -73,6 +73,7 @@ Route::delete("/v1/permission/{permission}", [PermissionController::class, "dest
 
 /* *************************************************************** Categories routes ************************************************************** */
 Route::get("/v1/categories", [CategoriesController::class, "index"])->middleware("auth:sanctum");
+Route::get("/v1/category/{category}", [CategoriesController::class, "show"])->middleware("auth:sanctum");
 Route::post("/v1/category", [CategoriesController::class, "store"])->middleware("auth:sanctum");
 Route::put("/v1/category/{id}", [CategoriesController::class, "update"])->middleware("auth:sanctum");
 Route::delete("/v1/category/{id}", [CategoriesController::class, "destroy"])->middleware("auth:sanctum");
