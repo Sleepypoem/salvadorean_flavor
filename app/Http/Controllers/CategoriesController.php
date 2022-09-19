@@ -46,6 +46,13 @@ class CategoriesController extends Controller
         $categories = new Categories();
         $categories->name = $request->name;
         $categories->save();
+
+        return response()->json(
+            [
+                "message" => "Addition success."
+            ],
+            201
+        );
     }
 
     /**
@@ -66,6 +73,12 @@ class CategoriesController extends Controller
         $categories = Categories::findOrFail($id);
         $categories->name = $request->name;
         $categories->save();
+
+        return response()->json(
+            [
+                "message" => "Modification success."
+            ]
+        );
     }
 
     /**
@@ -83,5 +96,9 @@ class CategoriesController extends Controller
         }
 
         Categories::destroy($id);
+
+        return response()->json([
+            "message" => "Deletion success."
+        ]);
     }
 }

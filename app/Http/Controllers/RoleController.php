@@ -65,8 +65,7 @@ class RoleController extends Controller
         return response()->json(
             [
                 "message" => "Addition success."
-            ],
-            201
+            ]
         );
     }
 
@@ -86,7 +85,7 @@ class RoleController extends Controller
 
         $obj_role = Role::findOrFail($id);
 
-        return $obj_role;
+        return $obj_role->load("permissions");
     }
 
     /**
@@ -143,7 +142,7 @@ class RoleController extends Controller
 
         return response()->json(
             [
-                "message" => "Delete success."
+                "message" => "Deletion success."
             ]
         );
     }

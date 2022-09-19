@@ -79,7 +79,7 @@ class PermissionController extends Controller
 
         $obj_permission = Permission::findOrFail($id);
 
-        return $obj_permission;
+        return $obj_permission->load("roles");
     }
 
     /**
@@ -110,7 +110,7 @@ class PermissionController extends Controller
 
         return response()->json(
             [
-                "message" => "Edit success."
+                "message" => "Modification success."
             ]
         );
     }
@@ -132,7 +132,7 @@ class PermissionController extends Controller
 
         return response()->json(
             [
-                "message" => "Delete success."
+                "message" => "Deletion success."
             ]
         );
     }
