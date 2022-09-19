@@ -44,7 +44,6 @@ class CategoriesController extends Controller
         }
 
         $categories = new Categories();
-        $categories->category_id = $request->category_id;
         $categories->name = $request->name;
         $categories->save();
     }
@@ -65,7 +64,6 @@ class CategoriesController extends Controller
         }
 
         $categories = Categories::findOrFail($id);
-        $categories->category_id = $request->category_id;
         $categories->name = $request->name;
         $categories->save();
     }
