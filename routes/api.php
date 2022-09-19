@@ -7,6 +7,7 @@ use App\Http\Controllers\TagsController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\CategoriesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -81,4 +82,10 @@ Route::delete("/v1/category/{id}", [CategoriesController::class, "destroy"])->mi
 Route::get("/image/user/{filename}", [ImageController::class, "userImage"])->middleware("auth:sanctum");
 Route::get("/image/recipe/{filename}", [ImageController::class, "recipeImage"])->middleware("auth:sanctum");
 Route::get("/image/ingredient/{filename}", [ImageController::class, "ingredientImage"])->middleware("auth:sanctum");
+/* ************************************************************************************************************************************************ */
+
+/* *************************************************************** If not logged in *************************************************************** */
+Route::get("/v1/unauthenticated", function () {
+    return response()->json(["message" => "User is not logged in."], 401);
+})->name("login");
 /* ************************************************************************************************************************************************ */
