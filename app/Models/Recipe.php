@@ -18,7 +18,7 @@ class Recipe extends Model
         'name',
         'ingredients',
         'steps',
-        'category',
+        'category_id',
     ];
 
     protected $primaryKey = "recipe_id";

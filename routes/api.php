@@ -7,9 +7,6 @@ use App\Http\Controllers\TagsController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\TagsController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,11 +20,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 /* ***************************************************************** Admin routes ***************************************************************** */
+
 Route::get("/v1/users", [AuthController::class, "index"])->middleware("auth:sanctum")->middleware("auth:sanctum");
 Route::post("/v1/register/admin", [AuthController::class, 'registerAdmin'])->middleware("auth:sanctum");
 Route::post("/v1/register/user", [AuthController::class, 'registerUser']);
