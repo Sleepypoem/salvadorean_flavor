@@ -43,8 +43,18 @@ class CategoriesController extends Controller
             ], 401);
         }
 
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
         $categories = new Categories();
-        $categories->name = $request->name;
+        $categories->name = $validated["name"];
         $categories->save();
 
         return response()->json(
@@ -83,8 +93,18 @@ class CategoriesController extends Controller
             ], 401);
         }
 
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
         $categories = Categories::findOrFail($id);
-        $categories->name = $request->name;
+        $categories->name = $validated["name"];
         $categories->save();
 
         return response()->json(

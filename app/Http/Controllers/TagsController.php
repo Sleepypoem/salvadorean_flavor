@@ -55,8 +55,18 @@ class TagsController extends Controller
             ], 401);
         }
 
+        try {
+            $validated = $request->validate([
+                "name" => "required"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
+
         Tags::create([
-            "name" => $request->name
+            "name" => $validated["name"]
         ]);
 
         return response()->json([
@@ -77,8 +87,19 @@ class TagsController extends Controller
                 "message" => "User has not the right permissions."
             ], 401);
         }
+        try {
+            $validated = $request->validate([
+                "name" => "required",
+                "guard_name" => "required",
+                "permission" => "required"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
         $obj_tag = Tags::findOrFail($request->id);
-        $obj_tag->name = $request->name;
+        $obj_tag->name = $validated["name"];
         $obj_tag->save();
 
         return response()->json([

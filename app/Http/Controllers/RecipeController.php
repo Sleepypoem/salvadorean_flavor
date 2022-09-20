@@ -123,6 +123,18 @@ class RecipeController extends Controller
             "image" => $this->saveImage("recipes/", $request->image)
         ]);
 
+        try {
+            $request->validate([
+                "name" => "required",
+                "steps" => "required",
+                "category_id" => "required"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
+
         $obj_recipe->name = $request->name;
         $obj_recipe->steps = $request->steps;
         $obj_recipe->category_id = $request->category_id;
