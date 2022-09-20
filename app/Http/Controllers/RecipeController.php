@@ -9,6 +9,7 @@ use App\Models\Recipe;
 use App\Http\Traits\ImageManager;
 use App\Models\User;
 use App\Http\Traits\HasAuthorization;
+use Illuminate\Validation\ValidationException;
 
 
 class RecipeController extends Controller

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tags;
 use App\Http\Traits\HasAuthorization;
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
 class TagsController extends Controller
@@ -59,7 +60,7 @@ class TagsController extends Controller
             $validated = $request->validate([
                 "name" => "required"
             ]);
-        } catch (\Illuminate\Validation\ValidationException) {
+        } catch (ValidationException) {
             return response()->json([
                 "message" => "Error in sent data."
             ], 422);
@@ -93,7 +94,7 @@ class TagsController extends Controller
                 "guard_name" => "required",
                 "permission" => "required"
             ]);
-        } catch (\Illuminate\Validation\ValidationException) {
+        } catch (ValidationException) {
             return response()->json([
                 "message" => "Error in sent data."
             ], 422);

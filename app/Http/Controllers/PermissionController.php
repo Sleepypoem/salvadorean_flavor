@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\HasAuthorization;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
 class PermissionController extends Controller

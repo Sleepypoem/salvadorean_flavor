@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Categories;
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 
 use App\Http\Traits\HasAuthorization;
 

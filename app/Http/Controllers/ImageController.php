@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Image;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Http\Traits\HasAuthorization;
 use App\Models\User;

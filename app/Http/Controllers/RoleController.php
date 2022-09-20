@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\HasAuthorization;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use App\Models\User;
 
