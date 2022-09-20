@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ingredients;
 use App\Http\Traits\HasAuthorization;
+use Illuminate\Validation\ValidationException;
 
 use App\Http\Traits\ImageManager;
 use App\Models\User;
@@ -63,8 +64,18 @@ class IngredientController extends Controller
             ], 401);
         }
 
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
         $obj_ingredient = Ingredients::create([
-            "name" => $request->name
+            "name" => $validated["name"]
         ]);
 
         $obj_ingredient->image()->create([
@@ -94,8 +105,18 @@ class IngredientController extends Controller
             ], 401);
         }
 
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
         $obj_ingredient = Ingredients::findOrFail($request->id);
-        $obj_image = $obj_ingredient->image;
+        $obj_image = $validated["name"];
 
         $this->deleteImage($obj_image, "ingredients");
 

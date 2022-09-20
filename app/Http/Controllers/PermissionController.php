@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\HasAuthorization;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
 class PermissionController extends Controller
@@ -43,16 +44,20 @@ class PermissionController extends Controller
             ], 401);
         }
 
-        $validateFields = [
-            "name" => "required",
-            "guard_name" => "required"
-        ];
-
-        $validatedFields = $request->validate($validateFields);
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255",
+                "guard_name" => "required"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
 
         Permission::create([
-            "name" => $validatedFields["name"],
-            "guard_name" => $validatedFields["guard_name"]
+            "name" => $validated["name"],
+            "guard_name" => $validated["guard_name"]
         ]);
 
         return response()->json(
@@ -79,7 +84,7 @@ class PermissionController extends Controller
 
         $obj_permission = Permission::findOrFail($id);
 
-        return $obj_permission;
+        return $obj_permission->load("roles");
     }
 
     /**
@@ -97,20 +102,25 @@ class PermissionController extends Controller
             ], 401);
         }
 
-        $validateFields = [
-            "name" => "required",
-            "guard_name" => "required"
-        ];
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255",
+                "guard_name" => "required"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
 
-        $validatedFields = $request->validate($validateFields);
 
         $obj_permission = Permission::findOrFail($id);
-        $obj_permission->name = $validatedFields["name"];
+        $obj_permission->name = $validated["name"];
         $obj_permission->save();
 
         return response()->json(
             [
-                "message" => "Edit success."
+                "message" => "Modification success."
             ]
         );
     }
@@ -132,7 +142,7 @@ class PermissionController extends Controller
 
         return response()->json(
             [
-                "message" => "Delete success."
+                "message" => "Deletion success."
             ]
         );
     }

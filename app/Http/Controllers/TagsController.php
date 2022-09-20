@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tags;
 use App\Http\Traits\HasAuthorization;
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
 class TagsController extends Controller
@@ -19,7 +20,7 @@ class TagsController extends Controller
      */
     public function index()
     {
-if (!$this->isAuthorized("userOrAdmin", User::class)) {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
@@ -38,9 +39,9 @@ if (!$this->isAuthorized("userOrAdmin", User::class)) {
     {
         $obj_tag = Tags::findOrfail($id);
 
-        return $obj_tag;
+        return $obj_tag->load("recipes");
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -55,13 +56,23 @@ if (!$this->isAuthorized("userOrAdmin", User::class)) {
             ], 401);
         }
 
-        $obj_tag = Tags::create([
-            "name"=> $request->name
+        try {
+            $validated = $request->validate([
+                "name" => "required"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
+
+        Tags::create([
+            "name" => $validated["name"]
         ]);
 
         return response()->json([
             "message" => "Addition success."
-        ], 201);
+        ]);
     }
     /**
      * Update the specified resource in storage.
@@ -77,14 +88,24 @@ if (!$this->isAuthorized("userOrAdmin", User::class)) {
                 "message" => "User has not the right permissions."
             ], 401);
         }
-        $obj_tag= Tags::findOrFail($request->id);
-        $obj_tag->name = $request->name;
+        try {
+            $validated = $request->validate([
+                "name" => "required",
+                "guard_name" => "required",
+                "permission" => "required"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
+        $obj_tag = Tags::findOrFail($request->id);
+        $obj_tag->name = $validated["name"];
         $obj_tag->save();
 
         return response()->json([
             "message" => "Modification success."
         ], 200);
-
     }
 
     /**

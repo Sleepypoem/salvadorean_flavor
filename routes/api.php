@@ -35,6 +35,7 @@ Route::delete("/v1/user/{user}", [AuthController::class, "destroy"])->middleware
 
 /* **************************************************************** Recipes routes **************************************************************** */
 Route::get("/v1/recipes", [RecipeController::class, "index"])->middleware("auth:sanctum");
+Route::get("/v1/recipe/{recipe}", [RecipeController::class, "show"])->middleware("auth:sanctum");
 Route::post("/v1/recipe", [RecipeController::class, "store"])->middleware("auth:sanctum");
 Route::put("/v1/recipe/{id}", [RecipeController::class, "update"])->middleware("auth:sanctum");
 Route::delete("/v1/recipe/{id}", [RecipeController::class, "destroy"])->middleware("auth:sanctum");
@@ -73,6 +74,7 @@ Route::delete("/v1/permission/{permission}", [PermissionController::class, "dest
 
 /* *************************************************************** Categories routes ************************************************************** */
 Route::get("/v1/categories", [CategoriesController::class, "index"])->middleware("auth:sanctum");
+Route::get("/v1/category/{category}", [CategoriesController::class, "show"])->middleware("auth:sanctum");
 Route::post("/v1/category", [CategoriesController::class, "store"])->middleware("auth:sanctum");
 Route::put("/v1/category/{id}", [CategoriesController::class, "update"])->middleware("auth:sanctum");
 Route::delete("/v1/category/{id}", [CategoriesController::class, "destroy"])->middleware("auth:sanctum");

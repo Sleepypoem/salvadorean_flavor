@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\HasAuthorization;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -47,26 +48,29 @@ class RoleController extends Controller
             ], 401);
         }
 
-        $validateFields = [
-            "name" => "required",
-            "permission" => "required",
-            "guard_name" => "required"
-        ];
-
-        $validatedFields = $request->validate($validateFields);
+        try {
+            $validated = $request->validate([
+                "name" => "required",
+                "guard_name" => "required",
+                "permission" => "required"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
 
         $obj_role = Role::create([
-            "name" => $validatedFields["name"],
-            "permission" => $validatedFields["permission"],
-            "guard_name" => $validatedFields["guard_name"]
+            "name" => $validated["name"],
+            "permission" => $validated["permission"],
+            "guard_name" => $validated["guard_name"]
         ]);
         $obj_role->syncPermissions($request->permission);
 
         return response()->json(
             [
                 "message" => "Addition success."
-            ],
-            201
+            ]
         );
     }
 
@@ -86,7 +90,7 @@ class RoleController extends Controller
 
         $obj_role = Role::findOrFail($id);
 
-        return $obj_role;
+        return $obj_role->load("permissions");
     }
 
     /**
@@ -104,20 +108,24 @@ class RoleController extends Controller
             ], 401);
         }
 
-        $validateFields = [
-            "name" => "required",
-            "permission" => "required",
-            "guard_name" => "required"
-        ];
-
-        $validatedFields = $request->validate($validateFields);
+        try {
+            $validated = $request->validate([
+                "name" => "required",
+                "guard_name" => "required",
+                "permission" => "required"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
 
         $obj_role = Role::findOrFail($id);
-        $obj_role->name = $validatedFields["name"];
-        $obj_role->guard_name = $validatedFields["guard_name"];
+        $obj_role->name = $validated["name"];
+        $obj_role->guard_name = $validated["guard_name"];
         $obj_role->save();
 
-        $obj_role->syncPermissions($validatedFields["permission"]);
+        $obj_role->syncPermissions($validated["permission"]);
 
         return response()->json(
             [
@@ -143,7 +151,7 @@ class RoleController extends Controller
 
         return response()->json(
             [
-                "message" => "Delete success."
+                "message" => "Deletion success."
             ]
         );
     }

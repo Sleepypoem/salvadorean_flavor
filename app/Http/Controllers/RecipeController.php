@@ -9,6 +9,7 @@ use App\Models\Recipe;
 use App\Http\Traits\ImageManager;
 use App\Models\User;
 use App\Http\Traits\HasAuthorization;
+use Illuminate\Validation\ValidationException;
 
 
 class RecipeController extends Controller
@@ -83,6 +84,19 @@ class RecipeController extends Controller
         ], 201);
     }
 
+    public function show($id)
+    {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
+        $obj_recipe = Recipe::findOrFail($id);
+
+        return $obj_recipe->load("ingredients", "image", "category", "tags");
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -109,6 +123,18 @@ class RecipeController extends Controller
             "title" => $obj_recipe->name . "_image",
             "image" => $this->saveImage("recipes/", $request->image)
         ]);
+
+        try {
+            $request->validate([
+                "name" => "required",
+                "steps" => "required",
+                "category_id" => "required"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ], 422);
+        }
 
         $obj_recipe->name = $request->name;
         $obj_recipe->steps = $request->steps;

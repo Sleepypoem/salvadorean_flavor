@@ -25,7 +25,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $users = User::with("roles", "image", "favorites")->get()->paginate(5);
+        $users = User::with("roles", "image", "favorites")->get()->paginate(10);
 
         return $users;
     }
@@ -179,8 +179,8 @@ class AuthController extends Controller
         $obj_user->favorites()->sync($favorites);
 
         return response()->json([
-            "message" => "User modified successfully"
-        ], 201);
+            "message" => "Modification successfully"
+        ], 200);
     }
 
     /**
@@ -204,7 +204,7 @@ class AuthController extends Controller
     {
         $obj_user = User::find($id);
 
-        if (!$this->isAuthorized("destroy", User::class)) {
+        if (!$this->isAuthorized("admin", User::class)) {
             return response()->json([
                 "message" => "User has not the right permissions."
             ], 401);
@@ -216,6 +216,6 @@ class AuthController extends Controller
         $obj_user->delete();
         return response()->json([
             "message" => "User deleted successfully."
-        ], 201);
+        ], 200);
     }
 }

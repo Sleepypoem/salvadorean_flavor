@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Categories;
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 
 use App\Http\Traits\HasAuthorization;
 
@@ -43,10 +44,39 @@ class CategoriesController extends Controller
             ], 401);
         }
 
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
         $categories = new Categories();
-        $categories->category_id = $request->category_id;
-        $categories->name = $request->name;
+        $categories->name = $validated["name"];
         $categories->save();
+
+        return response()->json(
+            [
+                "message" => "Addition success."
+            ],
+            201
+        );
+    }
+
+    public function show($id)
+    {
+        if (!$this->isAuthorized("userOrAdmin", User::class)) {
+            return response()->json([
+                "message" => "User has not the right permissions."
+            ], 401);
+        }
+
+        $obj_category = Categories::find($id);
+
+        return $obj_category->load("recipes");
     }
 
     /**
@@ -64,11 +94,27 @@ class CategoriesController extends Controller
             ], 401);
         }
 
+        try {
+            $validated = $request->validate([
+                "name" => "required|string|min:5|max:255"
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                "message" => "Error in sent data."
+            ]);
+        }
+
         $categories = Categories::findOrFail($id);
-        $categories->category_id = $request->category_id;
-        $categories->name = $request->name;
+        $categories->name = $validated["name"];
         $categories->save();
+
+        return response()->json(
+            [
+                "message" => "Modification success."
+            ]
+        );
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -85,5 +131,9 @@ class CategoriesController extends Controller
         }
 
         Categories::destroy($id);
+
+        return response()->json([
+            "message" => "Deletion success."
+        ]);
     }
 }
