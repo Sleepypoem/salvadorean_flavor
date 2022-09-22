@@ -165,6 +165,9 @@ class RecipeController extends Controller
         $obj_image = $obj_recipe->image;
 
         $this->deleteImage($obj_image, "recipes");
+
+        $obj_recipe->delete();
+        
         return response()->json([
             "message" => "Deletion success."
         ]);
