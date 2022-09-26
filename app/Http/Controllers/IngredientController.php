@@ -47,7 +47,7 @@ class IngredientController extends Controller
         }
         $obj_ingredient = Ingredients::findOrfail($id);
 
-        return $obj_ingredient;
+        return $obj_ingredient->load("recipes");
     }
 
     /**

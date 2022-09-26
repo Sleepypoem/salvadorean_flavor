@@ -13,10 +13,12 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function test_login_route()
+    public function test_user_is_not_logged()
     {
-        $response = $this->get('/login');
+        $response = $this->getJson('/api/v1/users');
 
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(401)
+            ->assertJson(["message" => "Unauthenticated."]);
     }
 }

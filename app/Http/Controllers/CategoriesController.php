@@ -74,7 +74,7 @@ class CategoriesController extends Controller
             ], 401);
         }
 
-        $obj_category = Categories::find($id);
+        $obj_category = Categories::findOrFail($id);
 
         return $obj_category->load("recipes");
     }

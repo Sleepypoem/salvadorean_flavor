@@ -81,13 +81,13 @@ Route::delete("/v1/category/{id}", [CategoriesController::class, "destroy"])->mi
 /* ************************************************************************************************************************************************ */
 
 /* ***************************************************************** Image routes ***************************************************************** */
-Route::get("/image/user/{filename}", [ImageController::class, "userImage"])->middleware("auth:sanctum");
-Route::get("/image/recipe/{filename}", [ImageController::class, "recipeImage"])->middleware("auth:sanctum");
-Route::get("/image/ingredient/{filename}", [ImageController::class, "ingredientImage"])->middleware("auth:sanctum");
+Route::get("/image/user/{filename}", [ImageController::class, "userImage"]);
+Route::get("/image/recipe/{filename}", [ImageController::class, "recipeImage"]);
+Route::get("/image/ingredient/{filename}", [ImageController::class, "ingredientImage"]);
 /* ************************************************************************************************************************************************ */
 
 /* *************************************************************** If not logged in *************************************************************** */
-Route::get("/v1/unauthenticated", function () {
+Route::get("/v1/", function () {
     return response()->json(["message" => "User is not logged in."], 401);
 })->name("login");
 /* ************************************************************************************************************************************************ */
