@@ -17,34 +17,18 @@ class ImageController extends Controller
      */
     public function userImage($fileName)
     {
-        if (!$this->isAuthorized("userOrAdmin", User::class)) {
-            return response()->json([
-                "message" => "User has not the right permissions."
-            ], 401);
-        }
-
         $path = public_path() . "\\storage\\images\\users\\" . $fileName;
         return Response::download($path);
     }
 
     public function recipeImage($fileName)
     {
-        if (!$this->isAuthorized("userOrAdmin", User::class)) {
-            return response()->json([
-                "message" => "User has not the right permissions."
-            ], 401);
-        }
         $path = public_path() . "\\storage\\images\\recipes\\" . $fileName;
         return Response::download($path);
     }
 
     public function ingredientImage($fileName)
     {
-        if (!$this->isAuthorized("userOrAdmin", User::class)) {
-            return response()->json([
-                "message" => "User has not the right permissions."
-            ], 401);
-        }
         $path = public_path() . "\\storage\\images\\ingredients\\" . $fileName;
         return Response::download($path);
     }

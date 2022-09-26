@@ -28,7 +28,7 @@ class RecipeController extends Controller
                 "message" => "User has not the right permissions."
             ], 401);
         }
-        $obj_recipes = Recipe::with("ingredients", "image", "category", "tags")->get()->paginate(15);
+        $obj_recipes = Recipe::with("ingredients.image", "image", "category", "tags")->get()->paginate(15);
         return $obj_recipes;
     }
 
