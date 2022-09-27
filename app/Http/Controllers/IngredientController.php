@@ -28,7 +28,7 @@ class IngredientController extends Controller
             ], 401);
         }
 
-        $obj_ingredient = Ingredients::with("recipes")->get();
+        $obj_ingredient = Ingredients::with("recipes", "image")->get();
         return $obj_ingredient;
     }
 
