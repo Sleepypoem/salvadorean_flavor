@@ -24,11 +24,11 @@ use Illuminate\Support\Facades\Route;
 
 /* ***************************************************************** Admin routes ***************************************************************** */
 
-Route::get("/v1/users", [AuthController::class, "index"])->middleware("auth:sanctum")->middleware("auth:sanctum");
+Route::get("/v1/users", [AuthController::class, "index"])->middleware("auth:sanctum");
 Route::post("/v1/register/admin", [AuthController::class, 'registerAdmin'])->middleware("auth:sanctum");
 Route::post("/v1/register/user", [AuthController::class, 'registerUser']);
 Route::post("/v1/login", [AuthController::class, 'login']);
-Route::post("/v1/user_info", [AuthController::class, 'userInfo'])->middleware("auth:sanctum");
+Route::get("/v1/user_info", [AuthController::class, 'userInfo'])->middleware("auth:sanctum");
 Route::put("/v1/user/{user}", [AuthController::class, "update"])->middleware("auth:sanctum");
 Route::delete("/v1/user/{user}", [AuthController::class, "destroy"])->middleware("auth:sanctum");
 /* ************************************************************************************************************************************************ */

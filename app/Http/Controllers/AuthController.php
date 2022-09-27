@@ -97,7 +97,7 @@ class AuthController extends Controller
         } catch (\Illuminate\Validation\ValidationException) {
             return response()->json([
                 "message" => "Error in sent data."
-            ]);
+            ], 401);
         }
 
         $obj_user = $this->createUser($request, $validated);
@@ -147,7 +147,7 @@ class AuthController extends Controller
         } catch (ValidationException) {
             return response()->json([
                 "message" => "Error in sent data."
-            ]);
+            ], 401);
         }
 
         if (!$this->isAuthorized("userIsSelf", $user) || !$this->isAuthorized("admin", $user)) {
