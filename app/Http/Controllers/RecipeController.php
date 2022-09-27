@@ -94,7 +94,7 @@ class RecipeController extends Controller
 
         $obj_recipe = Recipe::findOrFail($id);
 
-        return $obj_recipe->load("ingredients", "image", "category", "tags");
+        return $obj_recipe->load("ingredients.image", "image", "category", "tags");
     }
 
     /**
