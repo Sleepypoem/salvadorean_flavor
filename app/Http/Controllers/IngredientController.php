@@ -114,16 +114,18 @@ class IngredientController extends Controller
                 "message" => "Error in sent data."
             ]);
         }
-
         $obj_ingredient = Ingredients::findOrFail($request->id);
-        $obj_image = $validated["name"];
+        if ($request->image != null) {
 
-        $this->deleteImage($obj_image, "ingredients");
+            $obj_image = $validated["name"];
 
-        $obj_ingredient->image()->create([
-            "title" => $obj_ingredient->name . "_image",
-            "image" => $this->saveImage("ingredients/", $request->image)
-        ]);
+            $this->deleteImage($obj_image, "ingredients");
+
+            $obj_ingredient->image()->create([
+                "title" => $obj_ingredient->name . "_image",
+                "image" => $this->saveImage("ingredients/", $request->image)
+            ]);
+        }
         $obj_ingredient->name = $request->name;
         $obj_ingredient->save();
 
