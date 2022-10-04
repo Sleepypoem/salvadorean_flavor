@@ -9,6 +9,7 @@ use App\Models\Recipe;
 use App\Http\Traits\ImageManager;
 use App\Models\User;
 use App\Http\Traits\HasAuthorization;
+use App\Models\Image;
 use Illuminate\Validation\ValidationException;
 
 
@@ -50,7 +51,6 @@ class RecipeController extends Controller
         try {
             $request->validate([
                 "name" => "required",
-                "steps" => "required",
                 "category_id" => "required"
             ]);
         } catch (\Illuminate\Validation\ValidationException) {
@@ -117,17 +117,20 @@ class RecipeController extends Controller
         $obj_recipe = Recipe::findOrFail($id);
         $obj_image = $obj_recipe->image;
 
-        $this->deleteImage($obj_image, "recipes");
 
-        $obj_recipe->image()->create([
-            "title" => $obj_recipe->name . "_image",
-            "image" => $this->saveImage("recipes/", $request->image)
-        ]);
+        if ($request->image !== null) {
+            $this->deleteImage($obj_image, "recipes");
+            $obj_image->delete();
+
+            $obj_recipe->image()->create([
+                "title" => $obj_recipe->name . "_image",
+                "image" => $this->saveImage("recipes/", $request->image)
+            ]);
+        }
 
         try {
             $request->validate([
                 "name" => "required",
-                "steps" => "required",
                 "category_id" => "required"
             ]);
         } catch (\Illuminate\Validation\ValidationException) {
