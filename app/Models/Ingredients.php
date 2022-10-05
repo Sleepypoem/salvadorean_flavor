@@ -20,7 +20,7 @@ class Ingredients extends Model
 
     public function recipes()
     {
-        return $this->belongsToMany(Recipe::class, "ingredients_recipe", "recipe_id", "ingredient_id");
+        return $this->belongsToMany(Recipe::class, "ingredients_recipe", "ingredient_id", "recipe_id");
     }
 
     public function image()
